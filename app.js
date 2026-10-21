@@ -208,6 +208,31 @@ function renderRestaurants() {
   });
   updateMapMarkers(results);
 }
+function renderDedicatedRestaurants() {
+  if (!dedicatedList) return;
+  dedicatedList.replaceChildren();
+  restaurants.filter(place => place.dedicatedGF).forEach(place => {
+    const card = document.createElement("article");
+    card.className = "dedicated-card";
+    const badge = document.createElement("span");
+    badge.className = "status-badge preliminary";
+    badge.textContent = "Public statement · not audited";
+    const title = document.createElement("h3");
+    title.textContent = place.name;
+    const description = document.createElement("p");
+    description.textContent = place.description;
+    card.append(badge, title, description);
+    if (place.sourceUrl) {
+      const link = document.createElement("a");
+      link.href = place.sourceUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Venue statement ↗";
+      card.appendChild(link);
+    }
+    dedicatedList.appendChild(card);
+  });
+}
 function updateMapMarkers(results) {
   const ids = new Set(results.map(place => place.id));
   markers.forEach((marker, id) => {
@@ -330,6 +355,7 @@ document.getElementById("reviewForm").addEventListener("submit", event => {
 });
 initMap();
 renderRestaurants();
+renderDedicatedRestaurants();
 
 // The category guide is available whenever a visitor requests it.
 const categoryHelpDialog = document.getElementById("categoryHelpDialog");
