@@ -123,7 +123,7 @@
   }
   function renderMap() {
     var items = filterPlaces(places);
-    return '<section class="map-screen"><div class="map-tools"><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Map can be moved to any region.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Nearby listings</h2><span class="muted">' + items.length + ' places</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
+    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Venue coverage depends on available map data.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Nearby listings</h2><span class="muted">' + items.length + ' places</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
   }
   function renderPlace(id) {
     var p = places.find(function (x) { return x.id === id; });
@@ -301,6 +301,25 @@
       state.session = null; state.preferences = []; state.saved = []; state.notes = [];
       try { sessionStorage.removeItem(storageKey); } catch (e) {}
       go("welcome");
+    });
+    var regionForm = document.getElementById("regionSearch");
+    if (regionForm) regionForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var input = document.getElementById("regionQuery");
+      var status = document.getElementById("locationStatus");
+      var query = input.value.trim();
+      if (!query) { if (status) status.textContent = "Enter a city, region, or country."; return; }
+      var submit = regionForm.querySelector('button[type="submit"]');
+      submit.disabled = true; if (status) status.textContent = "Searching for " + query + "…";
+      fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=" + encodeURIComponent(query), { headers: { "Accept": "application/json" } })
+        .then(function (response) { if (!response.ok) throw new Error("Geocoding unavailable"); return response.json(); })
+        .then(function (results) {
+          if (!results.length) { if (status) status.textContent = "No matching region found. Try a nearby city."; return; }
+          state.userLocation = [Number(results[0].lat), Number(results[0].lon)];
+          if (state.map) state.map.setView(state.userLocation, 12);
+          if (status) status.textContent = "Map centered on " + results[0].display_name + ". Curated restaurant profiles remain limited; map coverage depends on OpenStreetMap data.";
+        }).catch(function () { if (status) status.textContent = "Region search is temporarily unavailable. You can still move the map manually."; })
+        .finally(function () { submit.disabled = false; });
     });
     var locate = document.getElementById("locateMe");
     if (locate) locate.addEventListener("click", function () {
