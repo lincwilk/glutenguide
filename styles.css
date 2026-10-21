@@ -7,3 +7,12 @@
 @media(max-width:950px){.hero{padding:48px 6vw}.explore-grid{grid-template-columns:1fr}.illustrative-map{height:320px}.restaurant-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.trust-section{grid-template-columns:1fr;gap:25px}.trust-intro{max-width:520px}.feedback-section{gap:35px}}
 @media(max-width:600px){.topbar{height:64px;padding:0 18px}.brand{font-size:18px}.brand-mark{width:30px;height:30px}.prototype-pill{font-size:8px;letter-spacing:.6px;padding:6px 8px}.hero{padding:39px 22px 33px;display:block}.hero h1{font-size:42px}.hero-description{font-size:14px}.hero-art{height:180px;margin-top:7px}.plate{width:126px;height:126px;border-width:8px}.plate-center{width:72px;height:72px;font-size:27px}.art-circle{width:180px;height:180px}.circle-two{width:135px;height:135px}.leaf-one{top:5px;right:24%}.leaf-two{bottom:0;left:19%}.content-section{padding:42px 16px 48px}.section-heading h2,.trust-intro h2,.feedback-copy h2{font-size:30px}.result-count{font-size:10px}.filter-row{flex-wrap:nowrap;overflow-x:auto;padding-bottom:7px;margin-right:-16px}.filter{white-space:nowrap;padding:9px 11px;font-size:10px}.map-topline{align-items:start;gap:8px}.map-caption{text-align:right}.illustrative-map{height:285px}.map-legend{font-size:9px;gap:9px 13px}.restaurant-list{grid-template-columns:1fr}.restaurant-card{grid-template-columns:72px minmax(0,1fr)}.restaurant-art{min-height:96px}.trust-section{padding:47px 20px}.trust-cards{grid-template-columns:1fr}.trust-card{padding:17px}.trust-card h3{margin:11px 0 5px}.feedback-section{padding:48px 20px;grid-template-columns:1fr;gap:20px}.review-form{padding:18px}footer{grid-template-columns:1fr;gap:12px;padding:26px 20px}.footer-disclaimer{grid-column:auto}.restaurant-dialog{padding:21px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+
+/* Real interactive map */
+.real-map{height:380px;position:relative;background:#e8eee4}
+.real-map .leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.5}
+.popup-details{margin-top:7px;border:0;border-radius:6px;padding:7px 10px;background:var(--forest);color:#fff;font:600 11px 'DM Sans',sans-serif}
+.map-error{padding:22px;color:#7e5719}
+.directions-link{display:inline-block;background:var(--forest);color:#fff;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;margin:8px 0 12px}
+@media(max-width:950px){.real-map{height:320px}}
+@media(max-width:600px){.real-map{height:285px}}
