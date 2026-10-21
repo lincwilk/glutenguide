@@ -1,4 +1,4 @@
-/* All user-facing UI labels live here to make future translation easier. */
+/* Shared labels, status terminology and recurring safety copy live here. Screen-specific explanatory copy is currently maintained alongside its screen renderer in app.js. */
 window.GG_STRINGS = {
   appName: "GlutenGuide",
   tagline: "Eat out with more clarity.",
