@@ -3,41 +3,28 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#143e35">
-  <meta name="description" content="Explore gluten-free dining information worldwide with transparent evidence labels.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="GlutenGuide">
-  <link rel="apple-touch-icon" href="icons/app-icon.svg">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261021-2">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <title>GlutenGuide</title>
+  <meta name="theme-color" content="#f6f3ec">
+  <meta name="robots" content="noindex, nofollow">
+  <title>GlutenGuide — Update in progress</title>
+  <style>
+    :root{color-scheme:light;--ink:#25332d;--muted:#66716a;--brand:#143e35;--bg:#f6f3ec;--card:#fffefa;--line:#e5e0d5}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100svh;padding:24px;display:grid;place-items:center;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{width:min(100%,480px);padding:clamp(24px,7vw,40px);background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 12px 36px #25332d0d}
+    .mark{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:var(--brand);color:#f6f3ec;font:32px Georgia,serif}
+    .eyebrow{margin:24px 0 8px;color:var(--muted);font-size:12px;font-weight:750;letter-spacing:.14em;text-transform:uppercase}
+    h1{margin:0;color:var(--brand);font:clamp(30px,8vw,42px)/1.12 Georgia,serif;letter-spacing:-.03em}
+    p{margin:16px 0 0;color:var(--muted)}
+    .note{margin-top:24px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;color:var(--ink);font-size:14px}
+  </style>
 </head>
 <body>
-  <a class="skip-link" href="#screen-content">Skip to content</a>
-  <div id="app" class="app-shell">
-    <aside class="side-rail" aria-label="Main navigation">
-      <a class="brand" href="#/home" aria-label="GlutenGuide home"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
-      <nav class="rail-nav" id="railNav"></nav>
-      <div class="rail-note">Eat out with more clarity.</div>
-    </aside>
-    <div class="app-column">
-      <header class="app-header" id="appHeader">
-        <a class="mobile-brand" href="#/home" aria-label="GlutenGuide home"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
-        <button type="button" id="headerBack" class="icon-button hidden" aria-label="Go back">←</button>
-        <h1 id="screenTitle">Explore</h1>
-        <button type="button" id="headerAction" class="icon-button hidden" aria-label="Screen action"></button>
-      </header>
-      <main id="screen-content" tabindex="-1" aria-live="polite"></main>
-    </div>
-    <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation"></nav>
-  </div>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="strings.js"></script>
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <main>
+    <div class="mark" aria-hidden="true">G</div>
+    <p class="eyebrow">GlutenGuide</p>
+    <h1>We’re making some updates.</h1>
+    <p>GlutenGuide is temporarily unavailable while we prepare the next version of the experience.</p>
+    <div class="note">Please check back soon. Restaurant information and food-preparation practices should always be confirmed directly with the restaurant.</div>
+  </main>
 </body>
 </html>
