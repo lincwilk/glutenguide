@@ -91,7 +91,7 @@ function statusClass(status) {
 }
 function filteredRestaurants() {
   return restaurants.filter(place => {
-    const filterMatch = activeFilter === "all" || place.status === activeFilter;
+    const filterMatch = activeFilter === "all" || (activeFilter === "dedicated" ? place.dedicatedGF === true : place.status === activeFilter);
     const text = (place.name + " " + place.neighborhood + " " + place.cuisine + " " + place.address).toLowerCase();
     return filterMatch && text.includes(searchTerm.toLowerCase());
   });
@@ -154,7 +154,7 @@ function escapeHtml(value) {
 }
 function renderRestaurants() {
   const results = filteredRestaurants();
-  resultCount.textContent = `${results.length} real ${results.length === 1 ? "venue" : "venues"}`;
+  resultCount.textContent = `${results.length} ${results.length === 1 ? "venue" : "venues"}`;
   list.innerHTML = "";
   if (!results.length) list.innerHTML = '<div class="empty-state">No venues match. Try another search or filter.</div>';
   results.forEach(place => {
@@ -233,7 +233,7 @@ function openRestaurant(id) {
     ["What is currently known", place.practices],
     ["Questions to ask the restaurant", place.questions.map(question => "• " + question).join("\n")],
     ["Verification status", place.reviewDate],
-    ["GlutenGuide audit status", "NOT AUDITED. This prototype demonstrates a planned checklist only. An actual review would document ingredient and supplier evidence, shared equipment and surfaces, cleaning, staff training, order handling, visit date, findings, and follow-up. No audit findings or pass/fail score have been recorded for this restaurant."]
+    ["GlutenGuide audit status", "No GlutenGuide on-site audit is recorded for this venue. Information shown here is not an audit result, certification, or guarantee that an individual meal is free from gluten or cross-contact."]
   ];
   sections.forEach(([title, content]) => {
     const section = document.createElement("section");
@@ -304,7 +304,7 @@ document.getElementById("reviewForm").addEventListener("submit", event => {
     card.append(meta, text);
     output.appendChild(card);
   });
-  message.textContent = "Demo review added in this browser session only.";
+  message.textContent = "Note added in this browser session only. It has not been sent or published.";
   document.getElementById("reviewText").value = "";
 });
 initMap();
