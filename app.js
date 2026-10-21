@@ -51,7 +51,7 @@ const restaurants = [
     id: 5, name: "Andie's Restaurant", neighborhood: "Andersonville · 5253 N Clark St",
     address: "5253 N Clark St, Chicago, IL 60640",
     lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
-    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing", evidenceType: "public_listing",
     description: "Mediterranean and Middle Eastern restaurant with menu items publicly marked gluten-free.",
     cuisine: "Mediterranean · Middle Eastern", icon: "🫒", rating: "Real venue",
     menu: "Public listings describe multiple gluten-free menu options. Confirm current menu and preparation with the restaurant.",
