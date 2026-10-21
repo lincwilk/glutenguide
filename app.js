@@ -296,7 +296,7 @@ function openRestaurant(id) {
     sourceLink.href = place.sourceUrl;
     sourceLink.target = "_blank";
     sourceLink.rel = "noopener noreferrer";
-    sourceLink.textContent = place.sourceChecked ? `Source: ${place.sourceLabel} · checked ${place.sourceChecked} ↗` : `Source: ${place.sourceLabel}`;
+    sourceLink.textContent = "Open source ↗";
     dialogContent.appendChild(sourceLink);
   }
   const warning = document.createElement("div");
