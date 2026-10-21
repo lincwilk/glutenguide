@@ -43,7 +43,7 @@ async function main() {
     await page.locator('[data-filter="all"]').click();
     await page.locator(".place-card").first().locator("[data-save]").click();
     await page.locator('a[href="#/saved"]:visible').click();
-    if (await page.locator(".place-card").count() !== 1) throw new Error("Saved places should update for the current session.");
+    if (await page.locator(".place-card").count() !== 1) throw new Error("Saved places should update for the current session. route=" + page.url() + "; cards=" + await page.locator(".place-card").count() + "; session=" + await page.evaluate(() => sessionStorage.getItem("gg-demo-session-v1")) + "; screen=" + (await page.locator("#screen-content").innerText()).slice(0, 500));
     await page.locator('a[href="#/home"]:visible').click();
     await page.locator(".place-card").first().click();
     await page.getByText("GlutenGuide has not visited this restaurant.", { exact: true }).waitFor();
