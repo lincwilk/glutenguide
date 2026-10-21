@@ -18,7 +18,7 @@
   .mobile-brand { font-size: 17px; gap: 8px; }
   .brand-mark { width: 30px; height: 30px; }
   #screen-content { width: 100%; padding: 18px 16px calc(88px + env(safe-area-inset-bottom)); }
-  .bottom-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
+  .bottom-nav { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); }
   .nav-item { min-width: 0; min-height: 48px; font-size: 11px; }
   .nav-icon { font-size: 20px; }
   .screen-intro { padding-top: 4px; }
