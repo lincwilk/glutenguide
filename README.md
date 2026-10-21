@@ -1,30 +1,43 @@
 # GlutenGuide
 
-GlutenGuide is an early-stage, mobile-first restaurant discovery project for people who need to avoid gluten, starting with a prototype for Chicago.
+GlutenGuide is a mobile-first restaurant discovery experience focused on clearer gluten-free dining information, starting with Chicago.
 
-## Current status
+## What is included
 
-This repository begins with a static, front-end prototype. It uses clearly labelled fictional sample restaurants and does not verify restaurant safety.
+- Restaurant search by name, cuisine, address, or neighborhood.
+- Interactive map and a matching restaurant list.
+- Filters for dedicated gluten-free facilities and information evidence status.
+- Venue profiles with practical questions to ask before ordering.
+- Public source links where a source has been recorded.
+- A local feedback form for personal experiences and information updates.
 
-## Goals for the first prototype
+## Evidence and venue information
 
-- Explore nearby restaurant listings on a map-like discovery view.
-- Filter restaurants by information status.
-- Read restaurant profiles and reported preparation practices.
-- Submit demo-only community feedback.
-- Clearly distinguish restaurant statements, reviewed documentation, and customer reports.
+The listing status describes the evidence available to GlutenGuide; it is not a food-safety rating or a guarantee that a meal is free from gluten or cross-contact.
 
-## Important safety note
+- **Public information** means the listing is based on information available publicly. It is not the same as direct confirmation from a venue.
+- **Restaurant confirmed** should be used only after a direct statement or confirmation is documented.
+- **Evidence reviewed** should be used only when the evidence, scope, reviewer role, findings, and review date are recorded.
+- **Limited information** means current, reliable information is missing or insufficient.
+- **Dedicated gluten-free facility** describes a venue's stated setup, not an independent audit or certification.
 
-GlutenGuide is not a medical device, certification body, or guarantee that food is safe. Sample listings and status labels in this prototype are fictional and must not be used to decide where to eat. Real listings need evidence-based review criteria, explicit dates and sources, moderation, and a process for corrections.
+A public statement is not an independent assessment. Users should confirm current ingredients, shared equipment, preparation surfaces, cleaning, and cross-contact procedures directly with the venue, especially when dining with celiac disease or serious allergies.
 
-## Run the prototype
+The current listings do not represent completed GlutenGuide on-site audits. No venue should receive a pass/fail result unless a real review has been completed and its evidence recorded. A payment or commercial relationship must never change an evidence status.
 
-Open `index.html` in a modern browser. No build step is needed.
+## Technical notes
 
-## Next steps
+This version is a static front-end site built with HTML, CSS, and JavaScript. It uses Leaflet and OpenStreetMap for the map and does not require a build step.
 
-1. Test the interface with prospective users.
-2. Define evidence requirements for each restaurant information status.
-3. Research and contact restaurants in Chicago.
-4. Choose a persistent database and hosting only after the prototype feedback.
+Open `index.html` in a modern browser to run it locally. Venue data is currently maintained in `app.js`. Feedback notes remain in memory for the current page session only; they are not sent to a server or shared with other users.
+
+## Before a public launch
+
+1. Record an official source and a checked date for each public claim.
+2. Confirm venue details and location data.
+3. Define evidence review criteria with qualified food-safety and celiac-disease expertise.
+4. Add moderation, privacy, correction, and retention processes before accepting public submissions.
+5. Add automated checks and test the map, search, filters, keyboard navigation, and mobile layouts in a browser.
+6. Introduce a backend only when accounts, moderation, and persistent data are ready to be supported.
+
+GlutenGuide is an information and discovery service, not a medical device, certification body, or guarantee that any individual meal is risk-free.

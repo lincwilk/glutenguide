@@ -4,33 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#143e35">
-  <meta name="description" content="Explore real Chicago restaurants and gluten-free dining information. Early prototype; verify all details directly with each restaurant.">
+  <meta name="description" content="Explore Chicago restaurants with gluten-free dining information, clear evidence labels, and practical questions to ask before ordering.">
   <title>GlutenGuide — Find your next table</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to restaurant listings</a>
   <header class="topbar">
     <a class="brand" href="#" aria-label="GlutenGuide home">
       <span class="brand-mark" aria-hidden="true">G</span>
       <span>Gluten<span class="brand-light">Guide</span></span>
     </a>
-    <span class="prototype-pill">EARLY DEMO · VERIFY DETAILS</span>
+    <a class="topbar-link" href="#audit-method">How evidence is reviewed</a>
   </header>
 
-  <main>
+  <main id="main-content">
     <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">EAT OUT WITH MORE CLARITY</p>
         <h1>Find a table.<br><em>Ask better questions.</em></h1>
-        <p class="hero-description">Explore real Chicago restaurants with publicly reported gluten-free options. Always confirm preparation practices directly.</p>
+        <p class="hero-description">Explore Chicago restaurants with gluten-free information, transparent evidence labels, and practical questions to ask before ordering.</p>
         <div class="search-wrap">
           <span aria-hidden="true">⌕</span>
           <label class="sr-only" for="search">Search restaurants or neighborhoods</label>
           <input id="search" type="search" placeholder="Restaurant or neighborhood…" autocomplete="off">
           <button id="searchButton" class="search-button">Search</button>
         </div>
-        <p class="hero-note">Real venues · Early research only · Not a food-safety certification</p>
+        <p class="hero-note">Clear information · Evidence matters · Ask about cross-contact</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="art-circle circle-one"></div><div class="art-circle circle-two"></div>
@@ -45,7 +46,7 @@
           <p class="eyebrow">CHICAGO · REAL VENUES</p>
           <h2 id="explore-title">Explore places</h2>
         </div>
-        <span id="resultCount" class="result-count">5 venues</span>
+        <span id="resultCount" class="result-count" aria-live="polite">Loading venues…</span>
       </div>
 
       <div class="category-help-row">
@@ -54,60 +55,52 @@
       </div>
       <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
         <button class="filter active" data-filter="all" aria-pressed="true">All venues</button>
-        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Documented review (none yet)</button>
-        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant-reported</button>
-        <button class="filter" data-filter="preliminary" aria-pressed="false"><span class="dot dot-gray"></span> Public info · unverified</button>
+        <button class="filter" data-filter="dedicated" aria-pressed="false"><span class="dot dot-green"></span> Dedicated GF facility</button>
+        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Evidence reviewed</button>
+        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant confirmed</button>
+        <button class="filter" data-filter="preliminary" aria-pressed="false"><span class="dot dot-gray"></span> Public information</button>
         <button class="filter" data-filter="unknown" aria-pressed="false"><span class="dot dot-gray"></span> Limited information</button>
       </div>
 
       <div class="explore-grid">
-        <section class="map-panel" aria-label="Interactive map of real Chicago restaurants">
+        <section class="map-panel" aria-label="Map of restaurant listings">
           <div class="map-topline"><span><span class="live-dot"></span> CHICAGO · INTERACTIVE MAP</span><span class="map-caption">Drag and zoom · Select a marker</span></div>
-          <div id="map" class="real-map" role="application" aria-label="Map showing restaurant locations in Chicago"></div>
-          <div class="map-legend"><span><i class="dot dot-green"></i> Documented review (none yet)</span><span><i class="dot dot-amber"></i> Restaurant-reported</span><span><i class="dot dot-gray"></i> Public info · unverified / limited information</span></div>
+          <div id="map" class="real-map" role="region" aria-label="Map showing restaurant locations in Chicago"></div>
+          <p class="map-access-note">Prefer a list? All locations are also available in the restaurant results beside the map.</p>
+          <div class="map-legend"><span><i class="dot dot-green"></i> Evidence reviewed</span><span><i class="dot dot-amber"></i> Restaurant confirmed</span><span><i class="dot dot-gray"></i> Public information / limited information</span></div>
         </section>
 
-        <section class="restaurant-list" id="restaurantList" aria-label="Restaurant sample results"></section>
+        <section class="restaurant-list" id="restaurantList" aria-label="Restaurant results" aria-live="polite"></section>
       </div>
     </section>
 
     <section class="trust-section">
       <div class="trust-intro"><p class="eyebrow">CLARITY MATTERS</p><h2>Know what the label means.</h2><p>We separate documented information, restaurant statements, and customer experiences instead of treating them as the same thing.</p></div>
       <div class="trust-cards">
-        <article class="trust-card"><span class="status-icon green-icon">✓</span><h3>Documentation reviewed</h3><p>In a future release, this will mean specified evidence was reviewed against published criteria. It is not a promise of zero risk.</p></article>
-        <article class="trust-card"><span class="status-icon amber-icon">↗</span><h3>Restaurant reported</h3><p>The restaurant says it has gluten-free options. Its preparation controls have not yet been reviewed in this prototype.</p></article>
+        <article class="trust-card"><span class="status-icon green-icon">✓</span><h3>Evidence reviewed</h3><p>Specific documents or procedures have been assessed against published criteria, with scope and review date recorded. This does not guarantee a meal is free from risk.</p></article>
+        <article class="trust-card"><span class="status-icon amber-icon">↗</span><h3>Restaurant confirmed</h3><p>The venue has directly supplied or confirmed the information. This is not an independent assessment of its preparation controls.</p></article>
         <article class="trust-card"><span class="status-icon gray-icon">?</span><h3>Limited information</h3><p>There isn't enough current information to assess the restaurant's practices. Ask the restaurant directly.</p></article>
       </div>
     </section>
 
     <section class="audit-section" id="audit-method">
-      <div class="audit-intro"><p class="eyebrow">HOW GLUTENGUIDE WILL CHECK PROCEDURES</p><h2>Restaurant audit preview</h2><p>This is a prototype of our planned audit process. <strong>GlutenGuide has not conducted any on-site audits yet.</strong> No restaurant has passed or failed an audit in this demo.</p></div>
+      <div class="audit-intro"><p class="eyebrow">HOW GLUTENGUIDE WILL CHECK PROCEDURES</p><h2>How we review evidence</h2><p>We distinguish public claims, information confirmed directly with a venue, documented evidence reviews, and on-site assessments. Each review should record its scope, evidence, findings, and date. A review is never a promise of zero risk.</p></div>
       <div class="audit-grid">
-        <article class="audit-card"><span class="audit-step">01</span><h3>Ingredients & supplier records</h3><p>Review ingredient labels, supplier documentation, and changes to recipes or products.</p><span class="audit-pending">Pending on-site verification</span></article>
-        <article class="audit-card"><span class="audit-step">02</span><h3>Kitchen & equipment</h3><p>Check shared fryers, grills, ovens, utensils, preparation surfaces, storage, and cleaning routines.</p><span class="audit-pending">Pending on-site verification</span></article>
-        <article class="audit-card"><span class="audit-step">03</span><h3>Staff & order handling</h3><p>Ask how staff identify celiac orders, communicate with the kitchen, and prevent cross-contact during service.</p><span class="audit-pending">Pending on-site verification</span></article>
+        <article class="audit-card"><span class="audit-step">01</span><h3>Ingredients & supplier records</h3><p>Review ingredient labels, supplier documentation, and changes to recipes or products.</p><span class="audit-pending">Review area</span></article>
+        <article class="audit-card"><span class="audit-step">02</span><h3>Kitchen & equipment</h3><p>Check shared fryers, grills, ovens, utensils, preparation surfaces, storage, and cleaning routines.</p><span class="audit-pending">Review area</span></article>
+        <article class="audit-card"><span class="audit-step">03</span><h3>Staff & order handling</h3><p>Ask how staff identify celiac orders, communicate with the kitchen, and prevent cross-contact during service.</p><span class="audit-pending">Review area</span></article>
       </div>
-      <div class="audit-example"><div><p class="eyebrow">SAMPLE REPORT · FICTIONAL EXAMPLE</p><h3>What an audit record could contain</h3><p>Example venue: “Demo Restaurant” (not a real listing). An actual report would record the visit date, scope, evidence checked, observations, corrective actions, and follow-up date. Findings must be documented from a real visit—not invented.</p></div><div class="audit-report-status"><strong>Example only</strong><span>No real audit completed</span></div></div>
+      <div class="audit-example"><div><p class="eyebrow">REVIEW RECORD</p><h3>What every review should document</h3><p>Source and date, scope of review, evidence examined, reviewer role, unresolved gaps, findings, corrective actions where applicable, and the next review date. On-site findings are recorded only after an actual visit.</p></div><div class="audit-report-status"><strong>Evidence first</strong><span>No unsupported ratings</span></div></div>
     </section>
     <section class="dedicated-section" id="dedicated-gf">
-      <div class="audit-intro"><p class="eyebrow">BASED ON PUBLIC VENUE STATEMENTS</p><h2>Dedicated gluten-free places</h2><p>These Chicago venues publicly describe their kitchen or facility as dedicated gluten-free. This is <strong>not a GlutenGuide audit or independent certification</strong>; confirm current practices directly before ordering.</p></div>
-      <div class="dedicated-grid">
-        <article class="dedicated-card"><span class="status-badge declared">Venue-reported · not audited</span><h3>CheSa’s Bistro &amp; Bar</h3><p>Cajun-Creole restaurant; the venue describes its kitchen as 100% gluten-free.</p><a href="https://chesasbistro.com/about" target="_blank" rel="noopener">Venue’s statement ↗</a></article>
-        <article class="dedicated-card"><span class="status-badge declared">Venue-reported · not audited</span><h3>Wheat’s End Cafe &amp; Bakery</h3><p>Café and bakery; the venue describes its facility as 100% dedicated gluten-free. Carryout and delivery only.</p><a href="https://wheatsendcafe.com/" target="_blank" rel="noopener">Venue’s statement ↗</a></article>
-        <article class="dedicated-card"><span class="status-badge declared">Venue-reported · not audited</span><h3>Defloured: A Gluten-Free Bakery</h3><p>Bakery; its FAQ states all goodies are gluten-free and made in a 100% dedicated gluten-free facility.</p><a href="https://www.deflouredbakery.com/faqs" target="_blank" rel="noopener">Venue’s statement ↗</a></article>
-      </div>
+      <div class="audit-intro"><p class="eyebrow">BASED ON PUBLIC VENUE STATEMENTS</p><h2>Dedicated gluten-free places</h2><p>These venues publicly describe their kitchen or facility as dedicated gluten-free. This is a venue statement, not an independent audit or certification. Check the current setup directly before ordering.</p></div>
+      <div class="dedicated-grid" id="dedicatedList" aria-label="Dedicated gluten-free venues"></div>
     </section>
     <section class="feedback-section" id="feedback">
-      <div class="feedback-copy"><p class="eyebrow">HELP SHAPE THE PRODUCT</p><h2>Share a demo review</h2><p>Try the feedback flow. This prototype stores demo reviews only in your current browser session; they are not shared with other users.</p></div>
+      <div class="feedback-copy"><p class="eyebrow">HELP SHAPE THE PRODUCT</p><h2>Share an experience</h2><p>Share a personal experience or an information update. Your note is shown only in this browser session and is not sent to GlutenGuide or shared with other users.</p></div>
       <form id="reviewForm" class="review-form">
-        <label for="reviewRestaurant">Sample restaurant</label>
-        <select id="reviewRestaurant" required>
-          <option value="1">Wheat’s End Cafe & Bakery</option>
-          <option value="2">CheSa’s Bistro & Bar</option>
-          <option value="3">Brightwok Kitchen</option>
-          <option value="4">BIBIBOP Asian Grill</option>
-          <option value="5">Andie’s Restaurant</option>
-        </select>
+        <label for="reviewRestaurant">Restaurant</label>
+        <select id="reviewRestaurant" required><option value="">Choose a restaurant</option></select>
         <label for="reviewType">What are you sharing?</label>
         <select id="reviewType" required>
           <option value="experience">Visit experience</option>
@@ -117,7 +110,7 @@
         <label for="reviewText">Your note</label>
         <textarea id="reviewText" maxlength="500" rows="4" placeholder="Describe what the staff told you or what you experienced…" required></textarea>
         <p class="form-note">Please don't include medical diagnoses or claim that symptoms prove exposure. Don't post private information.</p>
-        <button class="primary-button" type="submit">Add demo review</button>
+        <button class="primary-button" type="submit">Add note</button>
         <p id="formMessage" class="form-message" role="status"></p>
         <div id="reviewOutput" class="review-output" aria-live="polite"></div>
       </form>
@@ -127,7 +120,7 @@
   <footer>
     <a class="brand footer-brand" href="#"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
     <p>Built to make food information clearer — never to promise zero risk.</p>
-    <p class="footer-disclaimer">Restaurant locations are real; dietary information is preliminary and not independently verified. Do not rely on this prototype alone for celiac or allergy safety. Reviews entered here are temporary and local to your browser.</p>
+    <p class="footer-disclaimer">Listings describe the evidence currently available and are not a guarantee that a meal is free from gluten or cross-contact. Confirm ingredients and preparation directly with the venue, especially for celiac disease or serious allergies. Notes entered here stay in this browser session.</p>
   </footer>
 
   <dialog id="categoryHelpDialog" class="restaurant-dialog category-help-dialog" aria-labelledby="categoryHelpTitle">
@@ -139,7 +132,7 @@
     </div>
     <section class="category-definition">
       <span class="status-badge reviewed">Documented review</span>
-      <p><strong>Evidence reviewed against published criteria.</strong> In a future version, this will mean our team has reviewed specific documents or procedures and recorded what was checked and when. It is not a government certification, an inspection, or a promise of zero risk.</p>
+      <p><strong>Specific evidence reviewed against published criteria.</strong> The record should identify the documents or procedures checked, the scope, and the review date. This is not a government certification, an inspection, or a promise of zero risk.</p>
     </section>
     <section class="category-definition">
       <span class="status-badge declared">Restaurant-reported</span>
@@ -153,7 +146,7 @@
       <span class="status-badge unknown">Limited information</span>
       <p><strong>We do not have enough current, reliable information.</strong> This does not mean the restaurant is unsafe or safe. Contact the restaurant directly and do not infer suitability from the label.</p>
     </section>
-    <div class="dialog-warning"><strong>About this early demo:</strong> Restaurant details were gathered from preliminary public information and have not been independently verified by GlutenGuide. Some listings may not yet fit these categories precisely. Please contact the restaurant directly before making food decisions.</div>
+    <div class="dialog-warning"><strong>Important:</strong> Information labels describe the evidence available, not the safety of an individual meal. Ask about ingredients, shared equipment, cleaning, and cross-contact before ordering.</div>
     <button type="button" id="categoryHelpDone" class="primary-button category-done">Got it</button>
   </dialog>
 

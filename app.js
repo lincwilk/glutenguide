@@ -2,7 +2,9 @@ const restaurants = [
   {
     id: 1, name: "Wheat's End Cafe & Bakery", neighborhood: "Lakeview · 543 W Diversey Pkwy",
     address: "543 W Diversey Pkwy, Chicago, IL 60614",
-    lat: 41.9321, lng: -87.6438, status: "declared", statusLabel: "Venue reports dedicated GF facility · not audited",
+    lat: 41.9321, lng: -87.6438, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    dedicatedDescription: "The venue publicly describes its facility as dedicated gluten-free.",
+    sourceUrl: "https://wheatsendcafe.com/", sourceLabel: "Wheat’s End official website", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
     description: "Cafe and bakery known for a fully gluten-free menu.",
     cuisine: "Cafe · Bakery", icon: "🥐", rating: "Real venue",
     menu: "Public listings describe the cafe and bakery as fully gluten-free. Confirm current menu and operations directly with the venue.",
@@ -13,7 +15,8 @@ const restaurants = [
   {
     id: 2, name: "CheSa's Bistro & Bar", neighborhood: "Avondale · 3235 W Addison St",
     address: "3235 W Addison St, Suite C, Chicago, IL 60618",
-    lat: 41.9463, lng: -87.7094, status: "declared", statusLabel: "Venue reports 100% GF kitchen · not audited",
+    lat: 41.9463, lng: -87.7094, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    sourceUrl: "https://chesasbistro.com/about", sourceLabel: "CheSa’s official website", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
     description: "Cajun-Creole and Southern comfort food; public listings describe a gluten-free kitchen.",
     cuisine: "Cajun-Creole · Southern", icon: "🍲", rating: "Real venue",
     menu: "Public listings describe the restaurant as having a fully gluten-free kitchen. Confirm the current menu and status with the restaurant.",
@@ -24,7 +27,8 @@ const restaurants = [
   {
     id: 3, name: "Brightwok Kitchen", neighborhood: "The Loop · 21 E Adams St",
     address: "21 E Adams St, Chicago, IL 60603",
-    lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public info found · not independently verified",
+    lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
     description: "Asian-inspired fast-casual food with publicly listed gluten-free options.",
     cuisine: "Asian-inspired · Bowls", icon: "🥗", rating: "Real venue",
     menu: "Public information indicates gluten-free options are available. Menu items and preparation practices may change; check directly before ordering.",
@@ -35,7 +39,8 @@ const restaurants = [
   {
     id: 4, name: "BIBIBOP Asian Grill", neighborhood: "North Center area · 3304 N Western Ave",
     address: "3304 N Western Ave, Chicago, IL 60618",
-    lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level GF info · location not audited",
+    lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level information · location not reviewed", dedicatedGF: false,
+    sourceUrl: "", sourceLabel: "Brand-level source link not yet recorded", sourceChecked: "", evidenceType: "brand_level_public_info",
     description: "Build-your-own bowls; public brand information describes a gluten-free menu.",
     cuisine: "Asian-inspired · Bowls", icon: "🍚", rating: "Real venue",
     menu: "Public information describes gluten-free offerings. Verify this specific location, current ingredients, sauces, and handling procedures.",
@@ -46,13 +51,26 @@ const restaurants = [
   {
     id: 5, name: "Andie's Restaurant", neighborhood: "Andersonville · 5253 N Clark St",
     address: "5253 N Clark St, Chicago, IL 60640",
-    lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public info found · not independently verified",
+    lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
     description: "Mediterranean and Middle Eastern restaurant with menu items publicly marked gluten-free.",
     cuisine: "Mediterranean · Middle Eastern", icon: "🫒", rating: "Real venue",
     menu: "Public listings describe multiple gluten-free menu options. Confirm current menu and preparation with the restaurant.",
     practices: "A gluten-free menu label does not establish that cross-contact is prevented. GlutenGuide has not independently reviewed the restaurant's procedures.",
     questions: ["Which dishes can be prepared for someone with celiac disease?", "Are shared fryers, grills, or utensils used?", "Can staff confirm ingredients and cross-contact procedures?"],
     reviewDate: "GlutenGuide has not independently verified this information."
+  },
+  {
+    id: 6, name: "Defloured: A Gluten-Free Bakery", neighborhood: "Andersonville · 1477 W Balmoral Ave",
+    address: "1477 W Balmoral Ave, Chicago, IL 60640",
+    lat: 41.9794, lng: -87.6675, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    sourceUrl: "https://www.deflouredbakery.com/faqs", sourceLabel: "Defloured official FAQ", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
+    description: "Bakery whose official FAQ says its products are gluten-free and made in a dedicated gluten-free facility.",
+    cuisine: "Bakery · Desserts", icon: "🧁", rating: "Venue statement",
+    menu: "The bakery’s official FAQ says its products are gluten-free and made in a 100% dedicated gluten-free facility. The menu changes; confirm current products and other allergens directly.",
+    practices: "The venue publicly describes its facility as dedicated gluten-free. GlutenGuide has not independently reviewed or audited the bakery. The venue also notes that nuts are used in the facility.",
+    questions: ["Are all current products made in the dedicated gluten-free facility?", "What other allergens are handled in the bakery?", "Have ingredients, suppliers, or preparation practices changed recently?"],
+    reviewDate: "Official FAQ consulted 2026-10-21; no independent GlutenGuide review recorded."
   }
 ];
 
@@ -61,6 +79,7 @@ let searchTerm = "";
 let selectedId = 1;
 const sessionReviews = [];
 const list = document.getElementById("restaurantList");
+const dedicatedList = document.getElementById("dedicatedList");
 const resultCount = document.getElementById("resultCount");
 const searchInput = document.getElementById("search");
 const dialog = document.getElementById("restaurantDialog");
@@ -68,13 +87,19 @@ const dialogContent = document.getElementById("dialogContent");
 const reviewSelect = document.getElementById("reviewRestaurant");
 let map;
 const markers = new Map();
+restaurants.forEach(place => {
+  const option = document.createElement("option");
+  option.value = String(place.id);
+  option.textContent = place.name;
+  reviewSelect.appendChild(option);
+});
 
 function statusClass(status) {
   return status === "reviewed" ? "reviewed" : status === "declared" ? "declared" : status === "preliminary" ? "preliminary" : "unknown";
 }
 function filteredRestaurants() {
   return restaurants.filter(place => {
-    const filterMatch = activeFilter === "all" || place.status === activeFilter;
+    const filterMatch = activeFilter === "all" || (activeFilter === "dedicated" ? place.dedicatedGF === true : place.status === activeFilter);
     const text = (place.name + " " + place.neighborhood + " " + place.cuisine + " " + place.address).toLowerCase();
     return filterMatch && text.includes(searchTerm.toLowerCase());
   });
@@ -137,7 +162,7 @@ function escapeHtml(value) {
 }
 function renderRestaurants() {
   const results = filteredRestaurants();
-  resultCount.textContent = `${results.length} real ${results.length === 1 ? "venue" : "venues"}`;
+  resultCount.textContent = `${results.length} ${results.length === 1 ? "venue" : "venues"}`;
   list.innerHTML = "";
   if (!results.length) list.innerHTML = '<div class="empty-state">No venues match. Try another search or filter.</div>';
   results.forEach(place => {
@@ -183,6 +208,31 @@ function renderRestaurants() {
   });
   updateMapMarkers(results);
 }
+function renderDedicatedRestaurants() {
+  if (!dedicatedList) return;
+  dedicatedList.replaceChildren();
+  restaurants.filter(place => place.dedicatedGF).forEach(place => {
+    const card = document.createElement("article");
+    card.className = "dedicated-card";
+    const badge = document.createElement("span");
+    badge.className = "status-badge preliminary";
+    badge.textContent = "Public statement · not audited";
+    const title = document.createElement("h3");
+    title.textContent = place.name;
+    const description = document.createElement("p");
+    description.textContent = place.description;
+    card.append(badge, title, description);
+    if (place.sourceUrl) {
+      const link = document.createElement("a");
+      link.href = place.sourceUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Venue statement ↗";
+      card.appendChild(link);
+    }
+    dedicatedList.appendChild(card);
+  });
+}
 function updateMapMarkers(results) {
   const ids = new Set(results.map(place => place.id));
   markers.forEach((marker, id) => {
@@ -216,7 +266,7 @@ function openRestaurant(id) {
     ["What is currently known", place.practices],
     ["Questions to ask the restaurant", place.questions.map(question => "• " + question).join("\n")],
     ["Verification status", place.reviewDate],
-    ["GlutenGuide audit status", "NOT AUDITED. This prototype demonstrates a planned checklist only. An actual review would document ingredient and supplier evidence, shared equipment and surfaces, cleaning, staff training, order handling, visit date, findings, and follow-up. No audit findings or pass/fail score have been recorded for this restaurant."]
+    ["GlutenGuide audit status", "No GlutenGuide on-site audit is recorded for this venue. Information shown here is not an audit result, certification, or guarantee that an individual meal is free from gluten or cross-contact."]
   ];
   sections.forEach(([title, content]) => {
     const section = document.createElement("section");
@@ -236,12 +286,25 @@ function openRestaurant(id) {
   directions.rel = "noopener";
   directions.textContent = "Open directions ↗";
   dialogContent.appendChild(directions);
+  const sourceNote = document.createElement("p");
+  sourceNote.className = "card-location";
+  sourceNote.textContent = place.sourceChecked ? `${place.sourceLabel} · checked ${place.sourceChecked}` : place.sourceLabel;
+  dialogContent.appendChild(sourceNote);
+  if (place.sourceUrl) {
+    const sourceLink = document.createElement("a");
+    sourceLink.className = "directions-link";
+    sourceLink.href = place.sourceUrl;
+    sourceLink.target = "_blank";
+    sourceLink.rel = "noopener noreferrer";
+    sourceLink.textContent = "Open source ↗";
+    dialogContent.appendChild(sourceLink);
+  }
   const warning = document.createElement("div");
   warning.className = "dialog-warning";
-  warning.textContent = "This is an early prototype using public information. GlutenGuide has not independently verified this restaurant's current practices. Never assume an option is safe for celiac disease based on this listing alone; contact the restaurant directly.";
+  warning.textContent = "Information sources and review status are shown in this profile. Confirm current ingredients and preparation practices directly with the venue.";
   dialogContent.appendChild(warning);
   if (typeof dialog.showModal === "function") dialog.showModal();
-  else alert("Restaurant details are available in the page. Please use a modern browser for the full demo.");
+  else alert("Restaurant details are unavailable in this browser. Please use a modern browser.");
 }
 document.querySelectorAll(".filter").forEach(button => {
   button.addEventListener("click", () => {
@@ -287,13 +350,14 @@ document.getElementById("reviewForm").addEventListener("submit", event => {
     card.append(meta, text);
     output.appendChild(card);
   });
-  message.textContent = "Demo review added in this browser session only.";
+  message.textContent = "Note added in this browser session only. It has not been sent or published.";
   document.getElementById("reviewText").value = "";
 });
 initMap();
 renderRestaurants();
+renderDedicatedRestaurants();
 
-// Explain the labels automatically on a visitor's first visit, with a permanent button to reopen the guide.
+// The category guide is available whenever a visitor requests it.
 const categoryHelpDialog = document.getElementById("categoryHelpDialog");
 const openCategoryHelp = () => {
   if (categoryHelpDialog && typeof categoryHelpDialog.showModal === "function" && !categoryHelpDialog.open) {
@@ -306,14 +370,3 @@ document.getElementById("categoryHelpDone").addEventListener("click", () => cate
 categoryHelpDialog.addEventListener("click", event => {
   if (event.target === categoryHelpDialog) categoryHelpDialog.close();
 });
-try {
-  if (!sessionStorage.getItem("glutenguide-category-guide-seen")) {
-    window.setTimeout(() => {
-      openCategoryHelp();
-      sessionStorage.setItem("glutenguide-category-guide-seen", "1");
-    }, 700);
-  }
-} catch (error) {
-  // If storage is unavailable, the visitor can still open the guide using the button.
-  window.setTimeout(openCategoryHelp, 700);
-}
