@@ -46,10 +46,12 @@ async function main() {
     await page.locator('[data-filter="dedicated"]').click();
     if (await page.locator("#restaurantList .restaurant-card").count() !== 3) throw new Error("Dedicated-gluten-free filter should return three sourced venues.");
     await page.locator('[data-filter="all"]').click();
-    await page.locator("#restaurantList .restaurant-card").first().click();
-    if (!(await page.locator("#restaurantDialog[open]").count())) throw new Error("Selecting a venue should open its profile.");
+    await page.locator("#restaurantList .restaurant-card").first().focus();
+    await page.keyboard.press("Enter");
+    if (!(await page.locator("#restaurantDialog[open]").count())) throw new Error("Keyboard Enter should open a focused venue profile.");
     if (!(await page.getByText("Open source ↗").count())) throw new Error("Venue profile should display its source link when available.");
-    await page.locator("#dialogClose").click();
+    await page.keyboard.press("Escape");
+    if (await page.locator("#restaurantDialog[open]").count()) throw new Error("Escape should close the venue profile dialog.");
     await page.locator("#categoryHelpOpen").click();
     if (!(await page.locator("#categoryHelpDialog[open]").count())) throw new Error("Category guide should open only when requested.");
     await page.locator("#categoryHelpDone").click();
