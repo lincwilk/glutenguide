@@ -7,6 +7,13 @@ const context = { window: {} };
 vm.runInNewContext(source, context);
 const restaurants = context.window.restaurants;
 assert.ok(Array.isArray(restaurants) && restaurants.length > 0, "Venue data must be a non-empty array");
+const derive = context.window.deriveEvidenceStatus;
+assert.equal(typeof derive, "function", "Evidence status must come from one derivation function");
+assert.equal(derive({ evidenceType: "public_listing", sourceLabel: "Public listing", sourceUrl: "", sourceChecked: "2026-10-21" }), "unknown", "A public claim without a source URL cannot be promoted");
+assert.equal(derive({ evidenceType: "public_listing", sourceLabel: "Public listing", sourceUrl: "https://example.org", sourceChecked: "2026-10-21" }), "preliminary", "A sourced public claim remains provisional");
+assert.equal(derive({ evidenceType: "direct_venue_confirmation", directConfirmation: { statement: "Test", confirmedAt: "2026-10-21" } }), "unknown", "Incomplete direct confirmation must not be promoted");
+assert.equal(derive({ evidenceType: "direct_venue_confirmation", directConfirmation: { statement: "Test", confirmedAt: "2026-10-21", contactRole: "Manager", scope: "Menu" } }), "declared", "Complete direct confirmation may be categorized as restaurant-reported");
+assert.equal(derive({ evidenceType: "public_listing", documentReview: { approvalStatus: "approved", reviewDate: "2026-10-21", evidenceReviewed: ["ingredients"], scope: "Menu", limitations: "No on-site visit" } }), "reviewed", "A complete approved document review may be categorized as reviewed");
 
 const ids = restaurants.map((v) => v.id);
 const names = restaurants.map((v) => v.name);
