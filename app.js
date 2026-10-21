@@ -315,11 +315,7 @@
     if (!mapEl) return;
     if (!window.L) {
       state.mapFailed = true;
-      var fallback = document.createElement("div");
-      fallback.className = "map-error";
-      fallback.innerHTML = "<strong>The interactive map could not load.</strong><p>Browse the complete list below instead.</p>";
-      mapEl.replaceWith(fallback);
-      render();
+      mapEl.innerHTML = '<div class="map-error"><strong>The interactive map could not load.</strong><p>Browse the complete list below instead.</p></div>';
       return;
     }
     state.mapFailed = false;
