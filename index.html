@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#143e35">
-  <meta name="description" content="A prototype for discovering gluten-aware dining options in Chicago. Sample data only.">
+  <meta name="description" content="Explore real Chicago restaurants and gluten-free dining information. Early prototype; verify all details directly with each restaurant.">
   <title>GlutenGuide — Find your next table</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 </head>
 <body>
   <header class="topbar">
@@ -14,7 +15,7 @@
       <span class="brand-mark" aria-hidden="true">G</span>
       <span>Gluten<span class="brand-light">Guide</span></span>
     </a>
-    <span class="prototype-pill">DEMO · SAMPLE DATA</span>
+    <span class="prototype-pill">EARLY DEMO · VERIFY DETAILS</span>
   </header>
 
   <main>
@@ -22,14 +23,14 @@
       <div class="hero-copy">
         <p class="eyebrow">EAT OUT WITH MORE CLARITY</p>
         <h1>Find a table.<br><em>Ask better questions.</em></h1>
-        <p class="hero-description">Explore gluten-aware dining information and community experiences in Chicago.</p>
+        <p class="hero-description">Explore real Chicago restaurants with publicly reported gluten-free options. Always confirm preparation practices directly.</p>
         <div class="search-wrap">
           <span aria-hidden="true">⌕</span>
           <label class="sr-only" for="search">Search restaurants or neighborhoods</label>
           <input id="search" type="search" placeholder="Restaurant or neighborhood…" autocomplete="off">
           <button id="searchButton" class="search-button">Search</button>
         </div>
-        <p class="hero-note">Prototype only — these sample places are fictional.</p>
+        <p class="hero-note">Real venues · Early research only · Not a food-safety certification</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="art-circle circle-one"></div><div class="art-circle circle-two"></div>
@@ -41,34 +42,24 @@
     <section class="content-section" aria-labelledby="explore-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">CHICAGO · DEMO AREA</p>
+          <p class="eyebrow">CHICAGO · REAL VENUES</p>
           <h2 id="explore-title">Explore places</h2>
         </div>
-        <span id="resultCount" class="result-count">4 sample places</span>
+        <span id="resultCount" class="result-count">5 venues</span>
       </div>
 
       <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
-        <button class="filter active" data-filter="all" aria-pressed="true">All places</button>
-        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Documentation reviewed</button>
-        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant reported</button>
+        <button class="filter active" data-filter="all" aria-pressed="true">All venues</button>
+        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Dedicated GF kitchen reported</button>
+        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> GF options reported</button>
         <button class="filter" data-filter="unknown" aria-pressed="false"><span class="dot dot-gray"></span> Limited information</button>
       </div>
 
       <div class="explore-grid">
-        <section class="map-panel" aria-label="Illustrative restaurant map">
-          <div class="map-topline"><span><span class="live-dot"></span> CHICAGO AREA</span><span class="map-caption">Illustrative map · not for navigation</span></div>
-          <div class="illustrative-map" id="map">
-            <div class="map-water"></div>
-            <div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div>
-            <div class="road road-d"></div><div class="road road-e"></div><div class="road road-f"></div>
-            <span class="map-label label-west-loop">WEST LOOP</span><span class="map-label label-river-north">RIVER NORTH</span><span class="map-label label-loop">THE LOOP</span>
-            <button class="map-pin pin-1 selected" data-id="1" aria-label="View sample restaurant 1"><span>1</span></button>
-            <button class="map-pin pin-2" data-id="2" aria-label="View sample restaurant 2"><span>2</span></button>
-            <button class="map-pin pin-3" data-id="3" aria-label="View sample restaurant 3"><span>3</span></button>
-            <button class="map-pin pin-4" data-id="4" aria-label="View sample restaurant 4"><span>4</span></button>
-            <div class="map-disclaimer">Illustration only — pins do not reflect real addresses.</div>
-          </div>
-          <div class="map-legend"><span><i class="dot dot-green"></i> Reviewed information</span><span><i class="dot dot-amber"></i> Restaurant-reported</span><span><i class="dot dot-gray"></i> Limited information</span></div>
+        <section class="map-panel" aria-label="Interactive map of real Chicago restaurants">
+          <div class="map-topline"><span><span class="live-dot"></span> CHICAGO · INTERACTIVE MAP</span><span class="map-caption">Drag and zoom · Select a marker</span></div>
+          <div id="map" class="real-map" role="application" aria-label="Map showing restaurant locations in Chicago"></div>
+          <div class="map-legend"><span><i class="dot dot-green"></i> Dedicated gluten-free kitchen reported</span><span><i class="dot dot-amber"></i> Gluten-free options reported</span><span><i class="dot dot-gray"></i> Limited information</span></div>
         </section>
 
         <section class="restaurant-list" id="restaurantList" aria-label="Restaurant sample results"></section>
@@ -85,14 +76,15 @@
     </section>
 
     <section class="feedback-section" id="feedback">
-      <div class="feedback-copy"><p class="eyebrow">HELP SHAPE THE PRODUCT</p><h2>Share a demo review</h2><p>Try the feedback flow. This demo stores reviews only in your current browser session; it does not publish them to other people.</p></div>
+      <div class="feedback-copy"><p class="eyebrow">HELP SHAPE THE PRODUCT</p><h2>Share a demo review</h2><p>Try the feedback flow. This prototype stores demo reviews only in your current browser session; they are not shared with other users.</p></div>
       <form id="reviewForm" class="review-form">
         <label for="reviewRestaurant">Sample restaurant</label>
         <select id="reviewRestaurant" required>
-          <option value="1">Green Fork Kitchen (fictional)</option>
-          <option value="2">Lakeview Table (fictional)</option>
-          <option value="3">Juniper & Grain (fictional)</option>
-          <option value="4">City Corner Café (fictional)</option>
+          <option value="1">Wheat’s End Cafe & Bakery</option>
+          <option value="2">CheSa’s Bistro & Bar</option>
+          <option value="3">Brightwok Kitchen</option>
+          <option value="4">BIBIBOP Asian Grill</option>
+          <option value="5">Andie’s Restaurant</option>
         </select>
         <label for="reviewType">What are you sharing?</label>
         <select id="reviewType" required>
@@ -113,13 +105,14 @@
   <footer>
     <a class="brand footer-brand" href="#"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
     <p>Built to make food information clearer — never to promise zero risk.</p>
-    <p class="footer-disclaimer">All restaurants, reviews and map pins in this demonstration are fictional. Do not use this demo to make food-safety decisions.</p>
+    <p class="footer-disclaimer">Restaurant locations are real; dietary information is preliminary and not independently verified. Do not rely on this prototype alone for celiac or allergy safety. Reviews entered here are temporary and local to your browser.</p>
   </footer>
 
   <dialog id="restaurantDialog" class="restaurant-dialog">
     <button class="dialog-close" id="dialogClose" aria-label="Close restaurant details">×</button>
     <div id="dialogContent"></div>
   </dialog>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="app.js"></script>
 </body>
 </html>
