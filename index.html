@@ -48,6 +48,10 @@
         <span id="resultCount" class="result-count">5 venues</span>
       </div>
 
+      <div class="category-help-row">
+        <p>Not sure what the labels mean?</p>
+        <button type="button" id="categoryHelpOpen" class="category-help-button">How our categories work <span aria-hidden="true">ⓘ</span></button>
+      </div>
       <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
         <button class="filter active" data-filter="all" aria-pressed="true">All venues</button>
         <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Dedicated GF kitchen reported</button>
@@ -107,6 +111,29 @@
     <p>Built to make food information clearer — never to promise zero risk.</p>
     <p class="footer-disclaimer">Restaurant locations are real; dietary information is preliminary and not independently verified. Do not rely on this prototype alone for celiac or allergy safety. Reviews entered here are temporary and local to your browser.</p>
   </footer>
+
+  <dialog id="categoryHelpDialog" class="restaurant-dialog category-help-dialog" aria-labelledby="categoryHelpTitle">
+    <button class="dialog-close" id="categoryHelpClose" aria-label="Close category guide">×</button>
+    <div class="dialog-hero">
+      <p class="eyebrow">GLUTENGUIDE · CATEGORY GUIDE</p>
+      <h2 id="categoryHelpTitle">What do these labels mean?</h2>
+      <p class="dialog-subtitle">The labels describe the type of information available — they are not a guarantee that a meal is safe for someone with celiac disease.</p>
+    </div>
+    <section class="category-definition">
+      <span class="status-badge reviewed">Documented review</span>
+      <p><strong>Evidence reviewed against published criteria.</strong> In a future version, this will mean our team has reviewed specific documents or procedures and recorded what was checked and when. It is not a government certification, an inspection, or a promise of zero risk.</p>
+    </section>
+    <section class="category-definition">
+      <span class="status-badge declared">Restaurant-reported</span>
+      <p><strong>The restaurant says it offers gluten-free options or follows certain procedures.</strong> This is a statement, not an independent review. Ask about ingredients, shared equipment, preparation surfaces, and cross-contact.</p>
+    </section>
+    <section class="category-definition">
+      <span class="status-badge unknown">Limited information</span>
+      <p><strong>We do not have enough current, reliable information.</strong> This does not mean the restaurant is unsafe or safe. Contact the restaurant directly and do not infer suitability from the label.</p>
+    </section>
+    <div class="dialog-warning"><strong>About this early demo:</strong> Restaurant details were gathered from preliminary public information and have not been independently verified by GlutenGuide. Some listings may not yet fit these categories precisely. Please contact the restaurant directly before making food decisions.</div>
+    <button type="button" id="categoryHelpDone" class="primary-button category-done">Got it</button>
+  </dialog>
 
   <dialog id="restaurantDialog" class="restaurant-dialog">
     <button class="dialog-close" id="dialogClose" aria-label="Close restaurant details">×</button>
