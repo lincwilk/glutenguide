@@ -259,6 +259,10 @@ function openRestaurant(id) {
   directions.rel = "noopener";
   directions.textContent = "Open directions ↗";
   dialogContent.appendChild(directions);
+  const sourceNote = document.createElement("p");
+  sourceNote.className = "card-location";
+  sourceNote.textContent = place.sourceChecked ? `${place.sourceLabel} · checked ${place.sourceChecked}` : place.sourceLabel;
+  dialogContent.appendChild(sourceNote);
   if (place.sourceUrl) {
     const sourceLink = document.createElement("a");
     sourceLink.className = "directions-link";
