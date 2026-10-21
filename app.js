@@ -27,7 +27,7 @@ const restaurants = [
     id: 3, name: "Brightwok Kitchen", neighborhood: "The Loop · 21 E Adams St",
     address: "21 E Adams St, Chicago, IL 60603",
     lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
-    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing", evidenceType: "public_listing",
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing", evidenceType: "public_listing", evidenceType: "public_listing",
     description: "Asian-inspired fast-casual food with publicly listed gluten-free options.",
     cuisine: "Asian-inspired · Bowls", icon: "🥗", rating: "Real venue",
     menu: "Public information indicates gluten-free options are available. Menu items and preparation practices may change; check directly before ordering.",
