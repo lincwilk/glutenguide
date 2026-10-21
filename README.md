@@ -1,43 +1,30 @@
 # GlutenGuide
 
-GlutenGuide is a mobile-first restaurant discovery experience focused on clearer gluten-free dining information, starting with Chicago.
+GlutenGuide is a static, mobile-first restaurant discovery website for Chicago. It uses HTML, CSS, vanilla JavaScript, Leaflet and OpenStreetMap; there is no build step or backend.
 
-## What is included
+## Current app experience
 
-- Restaurant search by name, cuisine, address, or neighborhood.
-- Interactive map and a matching restaurant list.
-- Filters for dedicated gluten-free facilities and information evidence status.
-- Venue profiles with practical questions to ask before ordering.
-- Public source links where a source has been recorded.
-- A local feedback form for personal experiences and information updates.
+- Hash-based single-page navigation with Explore, Map, Saved, Community and Profile.
+- First-run splash, three onboarding cards, welcome, simulated sign-in/sign-up and optional dietary preferences.
+- Restaurant data is maintained in `data.js`; interface labels are centralized in `strings.js`.
+- Saved places, display name and optional preferences use sessionStorage where available. They are not synchronized to a server and normally reset when the tab closes. Password and email are not stored.
+- Community experiences are kept in memory for the current page session only and never alter a venue's evidence classification.
+- PWA manifest and SVG placeholder icon are included. A service worker is intentionally omitted to avoid serving stale restaurant information as though it were current.
 
-## Evidence and venue information
+## Evidence and food-safety limitations
 
-The listing status describes the evidence available to GlutenGuide; it is not a food-safety rating or a guarantee that a meal is free from gluten or cross-contact.
+Evidence categories describe the information available, not the safety of an individual meal. Public venue statements are not direct confirmation to GlutenGuide, document review, an on-site audit, or a certification. The app must explicitly state that GlutenGuide has not visited a restaurant unless an approved audit record exists. A dedicated facility is a separate characteristic.
 
-- **Public information** means the listing is based on information available publicly. It is not the same as direct confirmation from a venue.
-- **Restaurant confirmed** should be used only after a direct statement or confirmation is documented.
-- **Evidence reviewed** should be used only when the evidence, scope, reviewer role, findings, and review date are recorded.
-- **Limited information** means current, reliable information is missing or insufficient.
-- **Dedicated gluten-free facility** describes a venue's stated setup, not an independent audit or certification.
+Do not invent operating status, equipment-sharing details, confirmation dates, audits, ratings or certifications. Missing fields should remain “Not provided” or “Not yet confirmed”. Verify current information with each venue before making decisions, especially for celiac disease or serious allergies.
 
-A public statement is not an independent assessment. Users should confirm current ingredients, shared equipment, preparation surfaces, cleaning, and cross-contact procedures directly with the venue, especially when dining with celiac disease or serious allergies.
+## Run locally
 
-The current listings do not represent completed GlutenGuide on-site audits. No venue should receive a pass/fail result unless a real review has been completed and its evidence recorded. A payment or commercial relationship must never change an evidence status.
+Open `index.html` in a modern browser. Some installability features require HTTPS or localhost; GitHub Pages provides HTTPS. Browser storage may be disabled, in which case the demo can fall back to in-memory state.
 
-## Technical notes
+## Placeholder icon
 
-This version is a static front-end site built with HTML, CSS, and JavaScript. It uses Leaflet and OpenStreetMap for the map and does not require a build step.
+`icons/app-icon.svg` is a replaceable vector placeholder. For a more consistent install experience, export square PNGs at 192×192 and 512×512 and update the manifest and Apple touch icon reference. Test installation on the actual devices you support.
 
-Open `index.html` in a modern browser to run it locally. Venue data is currently maintained in `app.js`. Feedback notes remain in memory for the current page session only; they are not sent to a server or shared with other users.
+## Next stage
 
-## Before a public launch
-
-1. Record an official source and a checked date for each public claim.
-2. Confirm venue details and location data.
-3. Define evidence review criteria with qualified food-safety and celiac-disease expertise.
-4. Add moderation, privacy, correction, and retention processes before accepting public submissions.
-5. Add automated checks and test the map, search, filters, keyboard navigation, and mobile layouts in a browser.
-6. Introduce a backend only when accounts, moderation, and persistent data are ready to be supported.
-
-GlutenGuide is an information and discovery service, not a medical device, certification body, or guarantee that any individual meal is risk-free.
+When persistent accounts, moderation, and an approved audit workflow are required, introduce a backend (for example a database with row-level access control and authenticated reviewer roles). Never put private audit notes or secrets in this static repository.
