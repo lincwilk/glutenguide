@@ -9,7 +9,7 @@
   var bottomNav = document.getElementById("bottomNav");
   var railNav = document.getElementById("railNav");
   var toast = document.getElementById("toast");
-  var state = { query: "", filter: "all", selectedPlace: null, map: null, markers: new Map(), session: null, preferences: [], saved: [], notes: [], onboarding: 0, mapSheetOpen: true, mapFailed: false };
+  var state = { query: "", filter: "all", selectedPlace: null, map: null, markers: new Map(), session: null, preferences: [], saved: [], notes: [], onboarding: 0, mapSheetOpen: true, mapFailed: false, userLocation: null };
   var storageAvailable = true;
   var storageKey = "gg-demo-session-v1";
   var navItems = [
@@ -116,14 +116,14 @@
   function renderHome() {
     var items = filterPlaces(places);
     var greeting = state.session && state.session.name ? "Hi, " + state.session.name.split(" ")[0] : "Find a place to eat";
-    return '<section class="screen-intro"><p class="eyebrow">CHICAGO · RESTAURANT DISCOVERY</p><h2>' + esc(greeting) + '</h2><p>Find gluten-free information and see what is — and is not — documented.</p></section>' +
+    return '<section class="screen-intro"><p class="eyebrow">GLOBAL GLUTEN-FREE DISCOVERY</p><h2>' + esc(greeting) + '</h2><p>Explore gluten-free dining information wherever you are. Listings are currently curated for Chicago; local coverage will grow as information is checked.</p></section>' +
       '<label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search by restaurant, address or neighborhood</span><input id="searchInput" type="search" value="' + esc(state.query) + '" placeholder="Restaurant, address or neighborhood" autocomplete="off"><button type="button" id="clearSearch" aria-label="Clear search">×</button></label>' +
       filters() + '<div class="section-row"><h2>Places to explore</h2><span class="muted">' + items.length + ' ' + (items.length === 1 ? "place" : "places") + '</span></div>' + listMarkup(items) +
       '<p class="disclaimer-inline">' + esc(S.disclaimer) + '</p>';
   }
   function renderMap() {
     var items = filterPlaces(places);
-    return '<section class="map-screen"><div id="map" class="map-canvas" role="region" aria-label="Map of Chicago restaurant locations"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Nearby listings</h2><span class="muted">' + items.length + ' places</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
+    return '<section class="map-screen"><div class="map-tools"><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Map can be moved to any region.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Nearby listings</h2><span class="muted">' + items.length + ' places</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
   }
   function renderPlace(id) {
     var p = places.find(function (x) { return x.id === id; });
@@ -302,6 +302,13 @@
       try { sessionStorage.removeItem(storageKey); } catch (e) {}
       go("welcome");
     });
+    var locate = document.getElementById("locateMe");
+    if (locate) locate.addEventListener("click", function () {
+      var status = document.getElementById("locationStatus");
+      if (!navigator.geolocation) { if (status) status.textContent = "Location is not supported by this browser."; return; }
+      locate.disabled = true; if (status) status.textContent = "Requesting location permission…";
+      navigator.geolocation.getCurrentPosition(function (pos) { state.userLocation = [pos.coords.latitude, pos.coords.longitude]; if (state.map) state.map.setView(state.userLocation, 13); locate.disabled = false; if (status) status.textContent = "Map centered on your location. Curated listings currently cover Chicago."; }, function () { locate.disabled = false; if (status) status.textContent = "Location unavailable or permission denied. Move the map manually."; }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    });
     var toggle = document.getElementById("sheetToggle");
     if (toggle) toggle.addEventListener("click", function () { state.mapSheetOpen = !state.mapSheetOpen; var sheet = root.querySelector(".map-sheet"); sheet.classList.toggle("sheet-open", state.mapSheetOpen); sheet.classList.toggle("sheet-collapsed", !state.mapSheetOpen); toggle.setAttribute("aria-expanded", String(state.mapSheetOpen)); });
   }
@@ -368,7 +375,7 @@
     }
     state.mapFailed = false;
     if (state.map) { try { state.map.remove(); } catch (e) {} state.map = null; state.markers.clear(); }
-    state.map = L.map("map", { scrollWheelZoom: false }).setView([41.91, -87.66], 11);
+    state.map = L.map("map", { scrollWheelZoom: false }).setView(state.userLocation || [41.91, -87.66], state.userLocation ? 12 : 11);
     var tiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>' }).addTo(state.map);
     tiles.on("tileerror", function () {
       if (mapEl.querySelector(".tile-error")) return;
