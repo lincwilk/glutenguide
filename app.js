@@ -27,7 +27,7 @@ const restaurants = [
     id: 3, name: "Brightwok Kitchen", neighborhood: "The Loop · 21 E Adams St",
     address: "21 E Adams St, Chicago, IL 60603",
     lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
-    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing", evidenceType: "public_listing", evidenceType: "public_listing",
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
     description: "Asian-inspired fast-casual food with publicly listed gluten-free options.",
     cuisine: "Asian-inspired · Bowls", icon: "🥗", rating: "Real venue",
     menu: "Public information indicates gluten-free options are available. Menu items and preparation practices may change; check directly before ordering.",
@@ -51,7 +51,7 @@ const restaurants = [
     id: 5, name: "Andie's Restaurant", neighborhood: "Andersonville · 5253 N Clark St",
     address: "5253 N Clark St, Chicago, IL 60640",
     lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
-    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "",
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
     description: "Mediterranean and Middle Eastern restaurant with menu items publicly marked gluten-free.",
     cuisine: "Mediterranean · Middle Eastern", icon: "🫒", rating: "Real venue",
     menu: "Public listings describe multiple gluten-free menu options. Confirm current menu and preparation with the restaurant.",
@@ -277,7 +277,7 @@ function openRestaurant(id) {
   warning.textContent = "Information sources and review status are shown in this profile. Confirm current ingredients and preparation practices directly with the venue.";
   dialogContent.appendChild(warning);
   if (typeof dialog.showModal === "function") dialog.showModal();
-  else alert("Restaurant details are available in the page. Please use a modern browser for the full demo.");
+  else alert("Restaurant details are unavailable in this browser. Please use a modern browser.");
 }
 document.querySelectorAll(".filter").forEach(button => {
   button.addEventListener("click", () => {
@@ -329,7 +329,7 @@ document.getElementById("reviewForm").addEventListener("submit", event => {
 initMap();
 renderRestaurants();
 
-// Explain the labels automatically on a visitor's first visit, with a permanent button to reopen the guide.
+// The category guide is available whenever a visitor requests it.
 const categoryHelpDialog = document.getElementById("categoryHelpDialog");
 const openCategoryHelp = () => {
   if (categoryHelpDialog && typeof categoryHelpDialog.showModal === "function" && !categoryHelpDialog.open) {
