@@ -1,6 +1,6 @@
 # GlutenGuide
 
-GlutenGuide is an early-stage, mobile-first restaurant discovery project for people who need to avoid gluten, starting with a prototype for Chicago.
+GlutenGuide is an mobile-first restaurant discovery project for people who need to avoid gluten, starting with a prototype for Chicago.
 
 ## Current status
 
