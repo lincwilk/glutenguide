@@ -29,3 +29,26 @@
 .category-definition p{font-size:13px;color:#59695f;margin:9px 0 0}
 .category-done{width:100%;margin-top:14px}
 @media(max-width:600px){.category-help-row{align-items:flex-start;flex-direction:column}.category-help-button{width:100%}.category-help-dialog{padding:20px}}
+
+/* Audit workflow and public dedicated-GF venue directory */
+.audit-section,.dedicated-section{padding:64px max(6vw,22px);max-width:1440px;margin:0 auto}
+.audit-intro{max-width:760px;margin-bottom:25px}
+.audit-intro .eyebrow{color:#698978}
+.audit-intro h2{font-family:'Playfair Display',serif;font-size:36px;line-height:1.15;margin:0 0 12px}
+.audit-intro>p:last-child{color:var(--muted);font-size:14px}
+.audit-grid,.dedicated-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.audit-card,.dedicated-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:20px;box-shadow:var(--shadow)}
+.audit-step{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--forest);color:var(--lime);font-weight:700;font-size:12px}
+.audit-card h3,.dedicated-card h3{font-size:15px;margin:15px 0 8px}
+.audit-card p,.dedicated-card p{font-size:12px;color:var(--muted);margin:0 0 14px}
+.audit-pending{display:inline-block;padding:6px 8px;border-radius:6px;background:#edf0ed;color:#58655e;font-size:10px;font-weight:700}
+.audit-example{margin-top:16px;padding:22px;border:1px dashed #aab9ad;border-radius:14px;background:#f8faf5;display:flex;align-items:center;justify-content:space-between;gap:22px}
+.audit-example .eyebrow{color:#698978;margin-bottom:8px}
+.audit-example h3{margin:0 0 8px;font-size:17px}
+.audit-example p:not(.eyebrow){max-width:780px;color:var(--muted);font-size:12px;margin:0}
+.audit-report-status{flex:0 0 auto;display:flex;flex-direction:column;gap:4px;padding:13px;border-radius:9px;background:#fff;border:1px solid var(--line);font-size:12px}
+.audit-report-status span{color:var(--muted);font-size:10px}
+.dedicated-section{padding-top:18px;padding-bottom:70px}
+.dedicated-card .status-badge{margin-bottom:3px}
+.dedicated-card a{font-size:12px;color:var(--forest);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:800px){.audit-grid,.dedicated-grid{grid-template-columns:1fr}.audit-example{align-items:flex-start;flex-direction:column}.audit-intro h2{font-size:30px}}
