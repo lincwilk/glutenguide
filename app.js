@@ -39,7 +39,7 @@ const restaurants = [
     id: 4, name: "BIBIBOP Asian Grill", neighborhood: "North Center area · 3304 N Western Ave",
     address: "3304 N Western Ave, Chicago, IL 60618",
     lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level information · location not reviewed", dedicatedGF: false,
-    sourceUrl: "", sourceLabel: "Brand-level source link not yet recorded", sourceChecked: "",
+    sourceUrl: "", sourceLabel: "Brand-level source link not yet recorded", sourceChecked: "", evidenceType: "brand_level_public_info",
     description: "Build-your-own bowls; public brand information describes a gluten-free menu.",
     cuisine: "Asian-inspired · Bowls", icon: "🍚", rating: "Real venue",
     menu: "Public information describes gluten-free offerings. Verify this specific location, current ingredients, sauces, and handling procedures.",
