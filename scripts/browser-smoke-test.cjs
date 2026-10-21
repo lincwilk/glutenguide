@@ -48,7 +48,7 @@ async function main() {
     await page.locator('#railNav a[href="#/home"]').click();
     await page.getByRole("heading", { name: "Hi, Guest" }).waitFor();
     await page.locator(".place-card").first().click();
-    await page.getByText(/GlutenGuide has not visited this restaurant\./).waitFor();
+    await page.getByText(/GlutenGuide has not visited this restaurant\./).last().waitFor();
     await page.getByRole("heading", { name: "Questions to ask the restaurant" }).waitFor();
     await page.locator("[data-back]").click();
     await page.locator('#railNav a[href="#/community"]').click();
