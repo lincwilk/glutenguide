@@ -2,159 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#143e35">
-  <meta name="description" content="Explore Chicago restaurants with gluten-free dining information, clear evidence labels, and practical questions to ask before ordering.">
-  <title>GlutenGuide — Find your next table</title>
+  <meta name="description" content="Explore Chicago restaurants with gluten-free dining information and transparent evidence labels.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="GlutenGuide">
+  <link rel="apple-touch-icon" href="icons/app-icon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/app-icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <title>GlutenGuide</title>
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to restaurant listings</a>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="GlutenGuide home">
-      <span class="brand-mark" aria-hidden="true">G</span>
-      <span>Gluten<span class="brand-light">Guide</span></span>
-    </a>
-    <a class="topbar-link" href="#audit-method">How evidence is reviewed</a>
-  </header>
-
-  <main id="main-content">
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">EAT OUT WITH MORE CLARITY</p>
-        <h1>Find a table.<br><em>Ask better questions.</em></h1>
-        <p class="hero-description">Explore Chicago restaurants with gluten-free information, transparent evidence labels, and practical questions to ask before ordering.</p>
-        <div class="search-wrap">
-          <span aria-hidden="true">⌕</span>
-          <label class="sr-only" for="search">Search restaurants or neighborhoods</label>
-          <input id="search" type="search" placeholder="Restaurant or neighborhood…" autocomplete="off">
-          <button id="searchButton" class="search-button">Search</button>
-        </div>
-        <p class="hero-note">Clear information · Evidence matters · Ask about cross-contact</p>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="art-circle circle-one"></div><div class="art-circle circle-two"></div>
-        <div class="plate"><div class="plate-center">GF</div></div>
-        <span class="art-leaf leaf-one">✦</span><span class="art-leaf leaf-two">✳</span>
-      </div>
-    </section>
-
-    <section class="content-section" aria-labelledby="explore-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">CHICAGO · REAL VENUES</p>
-          <h2 id="explore-title">Explore places</h2>
-        </div>
-        <span id="resultCount" class="result-count" aria-live="polite">Loading venues…</span>
-      </div>
-
-      <div class="category-help-row">
-        <p>Not sure what the labels mean?</p>
-        <button type="button" id="categoryHelpOpen" class="category-help-button">How our categories work <span aria-hidden="true">ⓘ</span></button>
-      </div>
-      <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
-        <button class="filter active" data-filter="all" aria-pressed="true">All venues</button>
-        <button class="filter" data-filter="dedicated" aria-pressed="false"><span class="dot dot-green"></span> Dedicated GF facility</button>
-        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Evidence reviewed</button>
-        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant confirmed</button>
-        <button class="filter" data-filter="preliminary" aria-pressed="false"><span class="dot dot-gray"></span> Public information</button>
-        <button class="filter" data-filter="unknown" aria-pressed="false"><span class="dot dot-gray"></span> Limited information</button>
-      </div>
-
-      <div class="explore-grid">
-        <section class="map-panel" aria-label="Map of restaurant listings">
-          <div class="map-topline"><span><span class="live-dot"></span> CHICAGO · INTERACTIVE MAP</span><span class="map-caption">Drag and zoom · Select a marker</span></div>
-          <div id="map" class="real-map" role="region" aria-label="Map showing restaurant locations in Chicago"></div>
-          <p class="map-access-note">Prefer a list? All locations are also available in the restaurant results beside the map.</p>
-          <div class="map-legend"><span><i class="dot dot-green"></i> Evidence reviewed</span><span><i class="dot dot-amber"></i> Restaurant confirmed</span><span><i class="dot dot-gray"></i> Public information / limited information</span></div>
-        </section>
-
-        <section class="restaurant-list" id="restaurantList" aria-label="Restaurant results" aria-live="polite"></section>
-      </div>
-    </section>
-
-    <section class="trust-section">
-      <div class="trust-intro"><p class="eyebrow">CLARITY MATTERS</p><h2>Know what the label means.</h2><p>We separate documented information, restaurant statements, and customer experiences instead of treating them as the same thing.</p></div>
-      <div class="trust-cards">
-        <article class="trust-card"><span class="status-icon green-icon">✓</span><h3>Evidence reviewed</h3><p>Specific documents or procedures have been assessed against published criteria, with scope and review date recorded. This does not guarantee a meal is free from risk.</p></article>
-        <article class="trust-card"><span class="status-icon amber-icon">↗</span><h3>Restaurant confirmed</h3><p>The venue has directly supplied or confirmed the information. This is not an independent assessment of its preparation controls.</p></article>
-        <article class="trust-card"><span class="status-icon gray-icon">?</span><h3>Limited information</h3><p>There isn't enough current information to assess the restaurant's practices. Ask the restaurant directly.</p></article>
-      </div>
-    </section>
-
-    <section class="audit-section" id="audit-method">
-      <div class="audit-intro"><p class="eyebrow">HOW GLUTENGUIDE WILL CHECK PROCEDURES</p><h2>How we review evidence</h2><p>We distinguish public claims, information confirmed directly with a venue, documented evidence reviews, and on-site assessments. Each review should record its scope, evidence, findings, and date. A review is never a promise of zero risk.</p></div>
-      <div class="audit-grid">
-        <article class="audit-card"><span class="audit-step">01</span><h3>Ingredients & supplier records</h3><p>Review ingredient labels, supplier documentation, and changes to recipes or products.</p><span class="audit-pending">Review area</span></article>
-        <article class="audit-card"><span class="audit-step">02</span><h3>Kitchen & equipment</h3><p>Check shared fryers, grills, ovens, utensils, preparation surfaces, storage, and cleaning routines.</p><span class="audit-pending">Review area</span></article>
-        <article class="audit-card"><span class="audit-step">03</span><h3>Staff & order handling</h3><p>Ask how staff identify celiac orders, communicate with the kitchen, and prevent cross-contact during service.</p><span class="audit-pending">Review area</span></article>
-      </div>
-      <div class="audit-example"><div><p class="eyebrow">REVIEW RECORD</p><h3>What every review should document</h3><p>Source and date, scope of review, evidence examined, reviewer role, unresolved gaps, findings, corrective actions where applicable, and the next review date. On-site findings are recorded only after an actual visit.</p></div><div class="audit-report-status"><strong>Evidence first</strong><span>No unsupported ratings</span></div></div>
-    </section>
-    <section class="dedicated-section" id="dedicated-gf">
-      <div class="audit-intro"><p class="eyebrow">BASED ON PUBLIC VENUE STATEMENTS</p><h2>Dedicated gluten-free places</h2><p>These venues publicly describe their kitchen or facility as dedicated gluten-free. This is a venue statement, not an independent audit or certification. Check the current setup directly before ordering.</p></div>
-      <div class="dedicated-grid" id="dedicatedList" aria-label="Dedicated gluten-free venues"></div>
-    </section>
-    <section class="feedback-section" id="feedback">
-      <div class="feedback-copy"><p class="eyebrow">HELP SHAPE THE PRODUCT</p><h2>Share an experience</h2><p>Share a personal experience or an information update. Your note is shown only in this browser session and is not sent to GlutenGuide or shared with other users.</p></div>
-      <form id="reviewForm" class="review-form">
-        <label for="reviewRestaurant">Restaurant</label>
-        <select id="reviewRestaurant" required><option value="">Choose a restaurant</option></select>
-        <label for="reviewType">What are you sharing?</label>
-        <select id="reviewType" required>
-          <option value="experience">Visit experience</option>
-          <option value="question">Question I asked staff</option>
-          <option value="update">Information update</option>
-        </select>
-        <label for="reviewText">Your note</label>
-        <textarea id="reviewText" maxlength="500" rows="4" placeholder="Describe what the staff told you or what you experienced…" required></textarea>
-        <p class="form-note">Please don't include medical diagnoses or claim that symptoms prove exposure. Don't post private information.</p>
-        <button class="primary-button" type="submit">Add note</button>
-        <p id="formMessage" class="form-message" role="status"></p>
-        <div id="reviewOutput" class="review-output" aria-live="polite"></div>
-      </form>
-    </section>
-  </main>
-
-  <footer>
-    <a class="brand footer-brand" href="#"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
-    <p>Built to make food information clearer — never to promise zero risk.</p>
-    <p class="footer-disclaimer">Listings describe the evidence currently available and are not a guarantee that a meal is free from gluten or cross-contact. Confirm ingredients and preparation directly with the venue, especially for celiac disease or serious allergies. Notes entered here stay in this browser session.</p>
-  </footer>
-
-  <dialog id="categoryHelpDialog" class="restaurant-dialog category-help-dialog" aria-labelledby="categoryHelpTitle">
-    <button class="dialog-close" id="categoryHelpClose" aria-label="Close category guide">×</button>
-    <div class="dialog-hero">
-      <p class="eyebrow">GLUTENGUIDE · CATEGORY GUIDE</p>
-      <h2 id="categoryHelpTitle">What do these labels mean?</h2>
-      <p class="dialog-subtitle">The labels describe the type of information available — they are not a guarantee that a meal is safe for someone with celiac disease.</p>
+  <a class="skip-link" href="#screen-content">Skip to content</a>
+  <div id="app" class="app-shell">
+    <aside class="side-rail" aria-label="Main navigation">
+      <a class="brand" href="#/home" aria-label="GlutenGuide home"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
+      <nav class="rail-nav" id="railNav"></nav>
+      <div class="rail-note">Eat out with more clarity.</div>
+    </aside>
+    <div class="app-column">
+      <header class="app-header" id="appHeader">
+        <a class="mobile-brand" href="#/home" aria-label="GlutenGuide home"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
+        <button type="button" id="headerBack" class="icon-button hidden" aria-label="Go back">←</button>
+        <h1 id="screenTitle">Explore</h1>
+        <button type="button" id="headerAction" class="icon-button hidden" aria-label="Screen action"></button>
+      </header>
+      <main id="screen-content" tabindex="-1" aria-live="polite"></main>
     </div>
-    <section class="category-definition">
-      <span class="status-badge reviewed">Documented review</span>
-      <p><strong>Specific evidence reviewed against published criteria.</strong> The record should identify the documents or procedures checked, the scope, and the review date. This is not a government certification, an inspection, or a promise of zero risk.</p>
-    </section>
-    <section class="category-definition">
-      <span class="status-badge declared">Restaurant-reported</span>
-      <p><strong>The restaurant says it offers gluten-free options or follows certain procedures.</strong> This is a statement, not an independent review. Ask about ingredients, shared equipment, preparation surfaces, and cross-contact.</p>
-    </section>
-    <section class="category-definition">
-      <span class="status-badge preliminary">Public information found · unverified</span>
-      <p><strong>We found public information, but have not confirmed it directly with the restaurant.</strong> This is a provisional research label, not a restaurant statement and not an audit.</p>
-    </section>
-    <section class="category-definition">
-      <span class="status-badge unknown">Limited information</span>
-      <p><strong>We do not have enough current, reliable information.</strong> This does not mean the restaurant is unsafe or safe. Contact the restaurant directly and do not infer suitability from the label.</p>
-    </section>
-    <div class="dialog-warning"><strong>Important:</strong> Information labels describe the evidence available, not the safety of an individual meal. Ask about ingredients, shared equipment, cleaning, and cross-contact before ordering.</div>
-    <button type="button" id="categoryHelpDone" class="primary-button category-done">Got it</button>
-  </dialog>
-
-  <dialog id="restaurantDialog" class="restaurant-dialog">
-    <button class="dialog-close" id="dialogClose" aria-label="Close restaurant details">×</button>
-    <div id="dialogContent"></div>
-  </dialog>
+    <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation"></nav>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="strings.js"></script>
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
