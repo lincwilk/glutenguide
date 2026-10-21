@@ -149,7 +149,7 @@
   function renderCommunity() {
     return '<section class="screen-intro"><p class="eyebrow">COMMUNITY · DEMO</p><h2>Share an experience</h2><p>Individual experiences are anecdotal and do not change a restaurant’s evidence category.</p></section>' +
       '<div class="notice">Demo: your note stays in this browser session and is not shared.</div><form id="experienceForm" class="form-card"><label for="visitDate">Visit date <span class="muted">(optional)</span></label><input id="visitDate" type="date"><label for="experiencePlace">Restaurant</label><select id="experiencePlace" required><option value="">Choose a place</option>' + places.map(function (p) { return '<option value="' + p.id + '">' + esc(p.name) + '</option>'; }).join("") + '</select><label for="ordered">What was ordered? <span class="muted">(optional)</span></label><input id="ordered" maxlength="120"><label for="mentioned">Did you mention your dietary restriction?</label><select id="mentioned"><option value="Not answered">Prefer not to say</option><option value="Yes">Yes</option><option value="No">No</option></select><label for="staffProcedure">Could staff explain preparation procedures?</label><select id="staffProcedure"><option value="Not answered">Not answered</option><option value="Yes">Yes</option><option value="Partly">Partly</option><option value="No">No</option></select><label for="experienceNote">Optional note (max 500 characters)</label><textarea id="experienceNote" maxlength="500" rows="4" placeholder="Describe the interaction, not medical conclusions."></textarea><p class="form-help">Symptoms after a meal do not prove gluten exposure. Please do not include medical details or private information.</p><button class="button" type="submit">Add session note</button><p id="experienceMessage" role="status"></p></form>' +
-      '<div class="section-row"><h2>Session notes</h2><span class="muted">' + state.notes.length + '</span></div>' + (state.notes.length ? '<div class="place-list">' + state.notes.map(function (n) { return '<article class="info-card"><span class="status-badge status-unknown">Individual experience · not verified by GlutenGuide</span><h3>' + esc(n.place) + '</h3><p class="muted">' + esc(n.date || "Visit date not provided") + '</p><p><strong>Ordered:</strong> ' + esc(n.ordered || "Not provided") + '</p><p><strong>Restriction mentioned:</strong> ' + esc(n.mentioned) + '</p><p><strong>Staff explained procedures:</strong> ' + esc(n.staffProcedure) + '</p><p>' + esc(n.note || "No note added.") + '</p></article>'; }).join("") + '</div>' : '<div class="empty-state"><h2>No experiences added</h2><p>Notes you add here will appear only in this session.</p></div>');
+      '<div class="section-row"><h2>Session notes</h2><span class="muted">' + state.notes.length + '</span></div>' + '<div id="sessionNotes" class="place-list" aria-live="polite"></div>');
   }
   function renderProfile() {
     return '<section class="screen-intro"><p class="eyebrow">YOUR PROFILE · DEMO</p><h2>' + esc(state.session && state.session.name ? state.session.name : "Guest") + '</h2><p>' + (state.session && state.session.mode === "account" ? "Demo profile" : "Continuing as guest") + '</p></section>' +
@@ -212,6 +212,7 @@
     else if (name === "profile") html = renderProfile();
     else if (name === "about") html = renderAbout();
     root.innerHTML = html;
+    if (name === "community") renderSessionNotes();
     bind(name);
     if (name === "map") initMap();
     root.classList.remove("screen-enter");
@@ -303,6 +304,45 @@
     });
     var toggle = document.getElementById("sheetToggle");
     if (toggle) toggle.addEventListener("click", function () { state.mapSheetOpen = !state.mapSheetOpen; var sheet = root.querySelector(".map-sheet"); sheet.classList.toggle("sheet-open", state.mapSheetOpen); sheet.classList.toggle("sheet-collapsed", !state.mapSheetOpen); toggle.setAttribute("aria-expanded", String(state.mapSheetOpen)); });
+  }
+
+  function renderSessionNotes() {
+    var container = document.getElementById("sessionNotes");
+    if (!container) return;
+    container.replaceChildren();
+    if (!state.notes.length) {
+      var empty = document.createElement("div");
+      empty.className = "empty-state";
+      var heading = document.createElement("h2");
+      heading.textContent = "No experiences added";
+      var description = document.createElement("p");
+      description.textContent = "Notes you add here will appear only in this session.";
+      empty.append(heading, description);
+      container.appendChild(empty);
+      return;
+    }
+    state.notes.forEach(function (note) {
+      var article = document.createElement("article");
+      article.className = "info-card";
+      var badgeEl = document.createElement("span");
+      badgeEl.className = "status-badge status-unknown";
+      badgeEl.textContent = "Individual experience · not verified by GlutenGuide";
+      var heading = document.createElement("h3");
+      heading.textContent = note.place;
+      var date = document.createElement("p");
+      date.className = "muted";
+      date.textContent = note.date || "Visit date not provided";
+      var ordered = document.createElement("p");
+      ordered.textContent = "Ordered: " + (note.ordered || "Not provided");
+      var mentioned = document.createElement("p");
+      mentioned.textContent = "Restriction mentioned: " + note.mentioned;
+      var staff = document.createElement("p");
+      staff.textContent = "Staff explained procedures: " + note.staffProcedure;
+      var body = document.createElement("p");
+      body.textContent = note.note || "No note added.";
+      article.append(badgeEl, heading, date, ordered, mentioned, staff, body);
+      container.appendChild(article);
+    });
   }
   function localStorageSafe(key, value) {
     try {
