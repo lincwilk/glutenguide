@@ -9,7 +9,7 @@
   var bottomNav = document.getElementById("bottomNav");
   var railNav = document.getElementById("railNav");
   var toast = document.getElementById("toast");
-  var state = { query: "", filter: "all", selectedPlace: null, map: null, markers: new Map(), session: null, preferences: [], saved: [], notes: [], onboarding: 0, mapSheetOpen: true, mapFailed: false, userLocation: null, osmPlaces: [], osmLayer: null, osmTimer: null };
+  var state = { query: "", filter: "all", selectedPlace: null, map: null, markers: new Map(), session: null, preferences: [], saved: [], notes: [], onboarding: 0, mapSheetOpen: true, mapFailed: false, userLocation: null, userLocationSource: "", osmPlaces: [], osmLayer: null, osmTimer: null };
   var storageAvailable = true;
   var storageKey = "gg-demo-session-v1";
   var navItems = [
@@ -123,7 +123,7 @@
   }
   function renderMap() {
     var items = filterPlaces(places);
-    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Nearby food places load from OpenStreetMap.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Places on this map</h2><span class="muted" id="osmCount">Loading map places…</span></div><div id="osmPlaceList" class="osm-place-list"><p class="muted">Move the map or search a region to load nearby food places.</p></div><div class="section-row"><h2>GlutenGuide listings</h2><span class="muted">' + items.length + ' curated</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
+    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Nearby food places load from OpenStreetMap.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Places on this map</h2><span class="muted" id="osmCount">Loading map places…</span></div><div id="osmPlaceList" class="osm-place-list"><p class="muted">Move the map or search a region to load nearby food places.</p></div><div class="section-row"><h2>Curated Chicago listings</h2><span class="muted">Separate from nearby map results</span></div><p class="muted">These editorial profiles currently cover Chicago only. The nearby list above comes from OpenStreetMap for the map area.</p><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
   }
   function renderPlace(id) {
     var p = places.find(function (x) { return x.id === id; });
@@ -315,8 +315,8 @@
         .then(function (response) { if (!response.ok) throw new Error("Geocoding unavailable"); return response.json(); })
         .then(function (results) {
           if (!results.length) { if (status) status.textContent = "No matching region found. Try a nearby city."; return; }
-          state.userLocation = [Number(results[0].lat), Number(results[0].lon)];
-          if (state.map) state.map.setView(state.userLocation, 12);
+          state.userLocation = [Number(results[0].lat), Number(results[0].lon)]; state.userLocationSource = "search"; saveMapLocation(state.userLocation);
+          if (state.map) { state.map.setView(state.userLocation, 14); loadOsmPlaces(); }
           if (status) status.textContent = "Map centered on " + results[0].display_name + ". Loading nearby food places from OpenStreetMap.";
         }).catch(function () { if (status) status.textContent = "Region search is temporarily unavailable. You can still move the map manually."; })
         .finally(function () { submit.disabled = false; });
@@ -326,7 +326,7 @@
       var status = document.getElementById("locationStatus");
       if (!navigator.geolocation) { if (status) status.textContent = "Location is not supported by this browser."; return; }
       locate.disabled = true; if (status) status.textContent = "Requesting location permission…";
-      navigator.geolocation.getCurrentPosition(function (pos) { state.userLocation = [pos.coords.latitude, pos.coords.longitude]; if (state.map) state.map.setView(state.userLocation, 13); locate.disabled = false; if (status) status.textContent = "Map centered on your location. Loading nearby food places from OpenStreetMap."; }, function () { locate.disabled = false; if (status) status.textContent = "Location unavailable or permission denied. Move the map manually."; }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+      navigator.geolocation.getCurrentPosition(function (pos) { state.userLocation = [pos.coords.latitude, pos.coords.longitude]; state.userLocationSource = "device"; saveMapLocation(state.userLocation); if (state.map) { state.map.setView(state.userLocation, 15); loadOsmPlaces(); } locate.disabled = false; if (status) status.textContent = "Map centered on your location. Loading nearby food places from OpenStreetMap."; }, function () { locate.disabled = false; if (status) status.textContent = "Location unavailable or permission denied. Move the map manually."; }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
     });
     var toggle = document.getElementById("sheetToggle");
     if (toggle) toggle.addEventListener("click", function () { state.mapSheetOpen = !state.mapSheetOpen; var sheet = root.querySelector(".map-sheet"); sheet.classList.toggle("sheet-open", state.mapSheetOpen); sheet.classList.toggle("sheet-collapsed", !state.mapSheetOpen); toggle.setAttribute("aria-expanded", String(state.mapSheetOpen)); });
@@ -397,7 +397,7 @@
       }
       var box = b.getSouth() + "," + b.getWest() + "," + b.getNorth() + "," + b.getEast();
       var query = '[out:json][timeout:20];(nwr["amenity"~"^(restaurant|cafe|fast_food|food_court|ice_cream)$"](' + box + '););out center tags;';
-      if (status) status.textContent = "Loading…";
+      if (status) status.textContent = "Loading nearby restaurants and cafés…";
       (function requestOverpass(endpoints) {
         if (!endpoints.length) return Promise.reject(new Error("Map data unavailable"));
         return fetch(endpoints[0] + "?data=" + encodeURIComponent(query), {headers:{"Accept":"application/json"}})
@@ -428,6 +428,8 @@
     },600);
   }
 
+  function saveMapLocation(coords) { try { localStorage.setItem("gg-map-location-v1", JSON.stringify(coords)); } catch (e) {} }
+  function readMapLocation() { try { var raw = localStorage.getItem("gg-map-location-v1"); var p = raw ? JSON.parse(raw) : null; return Array.isArray(p) && p.length === 2 && isFinite(p[0]) && isFinite(p[1]) ? p : null; } catch (e) { return null; } }
   function initMap() {
     var mapEl = document.getElementById("map");
     if (!mapEl) return;
@@ -438,7 +440,8 @@
     }
     state.mapFailed = false;
     if (state.map) { try { state.map.remove(); } catch (e) {} state.map = null; state.markers.clear(); }
-    state.map = L.map("map", { scrollWheelZoom: false }).setView(state.userLocation || [41.91, -87.66], state.userLocation ? 12 : 11);
+    if (!state.userLocation) state.userLocation = readMapLocation();
+    state.map = L.map("map", { scrollWheelZoom: false }).setView(state.userLocation || [41.91, -87.66], state.userLocation ? 14 : 4);
     var tiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>' }).addTo(state.map);
     tiles.on("tileerror", function () {
       if (mapEl.querySelector(".tile-error")) return;
@@ -454,7 +457,7 @@
       });
       state.markers.set(p.id, marker);
     });
-    window.setTimeout(function () { if (state.map) { state.map.invalidateSize(true); loadOsmPlaces(); } }, 180);\n    state.map.on("moveend", loadOsmPlaces);
+    window.setTimeout(function () { if (state.map) { state.map.invalidateSize(true); loadOsmPlaces(); if (!state.userLocation && navigator.geolocation) { var status = document.getElementById("locationStatus"); if (status) status.textContent = "Requesting your location to find nearby food places…"; navigator.geolocation.getCurrentPosition(function (pos) { state.userLocation = [pos.coords.latitude, pos.coords.longitude]; state.userLocationSource = "device"; saveMapLocation(state.userLocation); if (state.map) { state.map.setView(state.userLocation, 15); loadOsmPlaces(); } if (status) status.textContent = "Showing food places near your location."; }, function () { if (status) status.textContent = "Location not available. Search a city or tap Use my location."; }, {enableHighAccuracy:false,timeout:10000,maximumAge:300000}); } } }, 180);\n    state.map.on("moveend", loadOsmPlaces);
     syncMapMarkers();
   }
   headerBack.addEventListener("click", function () { history.back(); });
