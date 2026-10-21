@@ -8,13 +8,11 @@ const types = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; ch
 async function main() {
   const server = http.createServer((req, res) => {
     const pathname = decodeURIComponent(new URL(req.url, "http://127.0.0.1").pathname);
-    const file = path.resolve(root, "." + pathname);
-    if (!file.startsWith(root + path.sep) && file !== path.join(root, "index.html")) {
+    const target = pathname === "/" ? path.join(root, "index.html") : path.resolve(root, "." + pathname);
+    if (!target.startsWith(root + path.sep)) {
       res.writeHead(403).end("Forbidden");
       return;
     }
-    let target = file;
-    if (pathname === "/") target = path.join(root, "index.html");
     fs.readFile(target, (error, data) => {
       if (error) {
         res.writeHead(404).end("Not found");
