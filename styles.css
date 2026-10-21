@@ -16,3 +16,16 @@
 .directions-link{display:inline-block;background:var(--forest);color:#fff;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;margin:8px 0 12px}
 @media(max-width:950px){.real-map{height:320px}}
 @media(max-width:600px){.real-map{height:285px}}
+
+/* Category explainer */
+.category-help-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-5px 0 14px;padding:12px 15px;border:1px solid var(--line);border-radius:11px;background:#f8faf5}
+.category-help-row p{margin:0;color:var(--muted);font-size:12px}
+.category-help-button{border:1px solid #b7cbb8;background:#fff;color:var(--forest);font-weight:700;font-size:12px;padding:9px 12px;border-radius:8px}
+.category-help-button:hover{background:#edf4e9}
+.category-help-dialog{max-width:590px;max-height:min(88vh,780px);overflow:auto}
+.category-help-dialog .dialog-hero{padding-top:14px}
+.category-help-dialog .dialog-hero h2{margin:8px 0 10px}
+.category-definition{border-top:1px solid var(--line);padding:15px 0}
+.category-definition p{font-size:13px;color:#59695f;margin:9px 0 0}
+.category-done{width:100%;margin-top:14px}
+@media(max-width:600px){.category-help-row{align-items:flex-start;flex-direction:column}.category-help-button{width:100%}.category-help-dialog{padding:20px}}
