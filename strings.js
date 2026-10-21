@@ -6,7 +6,7 @@ window.GG_STRINGS = {
   sessionNotice: "Your demo profile and preferences exist only in this browser tab. They reset when the tab closes.",
   evidence: {
     reviewed: "Documented review",
-    declared: "Restaurant-reported / confirmed",
+    declared: "Confirmed directly by restaurant",
     preliminary: "Public information found · unverified",
     unknown: "Limited information"
   },
