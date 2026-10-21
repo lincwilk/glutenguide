@@ -24,7 +24,7 @@ async function main() {
     const page = await context.newPage();
     page.on("pageerror", e => errors.push(e.message));
     await page.goto("http://127.0.0.1:4173/#/splash", { waitUntil: "domcontentloaded" });
-    await page.getByRole("button", { name: "Continue" }).click();
+    await page.locator("#skipSplash").click();
     await page.getByRole("heading", { name: "Find places and ask better questions." }).waitFor();
     await page.getByRole("button", { name: "Skip" }).click();
     await page.getByRole("heading", { name: "Welcome to GlutenGuide" }).waitFor();
