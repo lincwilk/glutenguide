@@ -46,7 +46,7 @@
           <p class="eyebrow">CHICAGO · REAL VENUES</p>
           <h2 id="explore-title">Explore places</h2>
         </div>
-        <span id="resultCount" class="result-count">5 venues</span>
+        <span id="resultCount" class="result-count" aria-live="polite">Loading venues…</span>
       </div>
 
       <div class="category-help-row">
@@ -55,20 +55,22 @@
       </div>
       <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
         <button class="filter active" data-filter="all" aria-pressed="true">All venues</button>
-        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Documented review (none yet)</button>
-        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant-reported</button>
-        <button class="filter" data-filter="preliminary" aria-pressed="false"><span class="dot dot-gray"></span> Public info · unverified</button>
+        <button class="filter" data-filter="dedicated" aria-pressed="false"><span class="dot dot-green"></span> Dedicated GF facility</button>
+        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Evidence reviewed</button>
+        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant confirmed</button>
+        <button class="filter" data-filter="preliminary" aria-pressed="false"><span class="dot dot-gray"></span> Public information</button>
         <button class="filter" data-filter="unknown" aria-pressed="false"><span class="dot dot-gray"></span> Limited information</button>
       </div>
 
       <div class="explore-grid">
-        <section class="map-panel" aria-label="Interactive map of real Chicago restaurants">
+        <section class="map-panel" aria-label="Map of restaurant listings">
           <div class="map-topline"><span><span class="live-dot"></span> CHICAGO · INTERACTIVE MAP</span><span class="map-caption">Drag and zoom · Select a marker</span></div>
-          <div id="map" class="real-map" role="application" aria-label="Map showing restaurant locations in Chicago"></div>
+          <div id="map" class="real-map" role="region" aria-label="Map showing restaurant locations in Chicago"></div>
+          <p class="map-access-note">Prefer a list? All locations are also available in the restaurant results beside the map.</p>
           <div class="map-legend"><span><i class="dot dot-green"></i> Documented review (none yet)</span><span><i class="dot dot-amber"></i> Restaurant-reported</span><span><i class="dot dot-gray"></i> Public info · unverified / limited information</span></div>
         </section>
 
-        <section class="restaurant-list" id="restaurantList" aria-label="Restaurant sample results"></section>
+        <section class="restaurant-list" id="restaurantList" aria-label="Restaurant results" aria-live="polite"></section>
       </div>
     </section>
 
