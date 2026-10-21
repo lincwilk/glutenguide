@@ -87,3 +87,5 @@ restaurants.forEach(function (place) {
   if (!place.evidenceLimitations) place.evidenceLimitations = "This source does not establish current kitchen procedures or the safety of an individual meal.";
   place.onSiteAudit = null;
 });
+
+window.restaurants = restaurants;
