@@ -52,3 +52,5 @@
 .dedicated-card .status-badge{margin-bottom:3px}
 .dedicated-card a{font-size:12px;color:var(--forest);font-weight:700;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:800px){.audit-grid,.dedicated-grid{grid-template-columns:1fr}.audit-example{align-items:flex-start;flex-direction:column}.audit-intro h2{font-size:30px}}
+
+.status-badge.preliminary{background:#edf0ed;color:#58655e}
