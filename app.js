@@ -45,7 +45,7 @@
   }
   function route() {
     var hash = location.hash || "";
-    if (!hash || hash === "#") return { name: "splash" };
+    if (!hash || hash === "#") return { name: "home" };
     var path = hash.replace(/^#\/?/, "").split("/");
     if (path[0] === "place" && path[1]) return { name: "place", id: Number(path[1]) };
     var valid = ["splash", "onboarding", "welcome", "signup", "signin", "preferences", "home", "map", "saved", "community", "profile", "about"];
@@ -117,14 +117,14 @@
   function renderHome() {
     var items = filterPlaces(places);
     var greeting = state.session && state.session.name ? "Hi, " + state.session.name.split(" ")[0] : "Find a place to eat";
-    return '<section class="screen-intro"><p class="eyebrow">GLOBAL GLUTEN-FREE DISCOVERY</p><h2>' + esc(greeting) + '</h2><p>Explore gluten-free dining information wherever you are. Listings are currently curated for Chicago; local coverage will grow as information is checked.</p></section>' +
+    return '<section class="screen-intro"><p class="eyebrow">GLOBAL GLUTEN-FREE DISCOVERY</p><h2>' + esc(greeting) + '</h2><p>Search for food places anywhere in the world. Use the map to explore your area or search another city; the initial editorial profiles are a small Chicago pilot.</p></section>' +
       '<label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search by restaurant, address or neighborhood</span><input id="searchInput" type="search" value="' + esc(state.query) + '" placeholder="Restaurant, address or neighborhood" autocomplete="off"><button type="button" id="clearSearch" aria-label="Clear search">×</button></label>' +
-      filters() + '<div class="section-row"><h2>Places to explore</h2><span class="muted">' + items.length + ' ' + (items.length === 1 ? "place" : "places") + '</span></div>' + listMarkup(items) +
+      filters() + '<div class="section-row"><h2>Initial editorial profiles</h2><span class="muted">' + items.length + ' ' + (items.length === 1 ? "place" : "places") + '</span></div>' + listMarkup(items) +
       '<p class="disclaimer-inline">' + esc(S.disclaimer) + '</p>';
   }
   function renderMap() {
     var items = filterPlaces(places);
-    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Nearby food places load from OpenStreetMap.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Places on this map</h2><span class="muted" id="osmCount">Loading map places…</span></div><div id="osmPlaceList" class="osm-place-list"><p class="muted">Move the map or search a region to load nearby food places.</p></div><div class="section-row"><h2>Curated Chicago listings</h2><span class="muted">Separate from nearby map results</span></div><p class="muted">These editorial profiles currently cover Chicago only. The nearby list above comes from OpenStreetMap for the map area.</p><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
+    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Nearby food places load from OpenStreetMap.</span></div><div id="map" class="map-canvas" role="region" aria-label="Interactive world map with nearby food places"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Places on this map</h2><span class="muted" id="osmCount">Loading map places…</span></div><div id="osmPlaceList" class="osm-place-list"><p class="muted">Move the map or search a region to load nearby food places.</p></div><div class="section-row"><h2>Editorial profiles</h2><span class="muted">Initial pilot collection</span></div><p class="muted">The profiles below are an initial Chicago pilot collection. Search the map above for food places anywhere; OpenStreetMap listings are not gluten-free verification.</p><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
   }
   function renderPlace(id) {
     var p = places.find(function (x) { return x.id === id; });
@@ -137,11 +137,11 @@
     var audit = p.onSiteAudit && p.onSiteAudit.approvalStatus === "approved" ? '<p>Audit record: ' + esc(p.onSiteAudit.auditDate || "Date not provided") + '</p>' : notVisited(p);
     var staleWarning = p.status === "preliminary" ? '<div class="notice">Public information has not been confirmed directly with this restaurant and may be outdated.</div>' : "";
     return '<div class="profile-heading"><button type="button" class="back-link" data-back>← Back</button>' + badge(p) + '<h2>' + esc(p.name) + '</h2><p>' + esc(p.address || "Address not provided") + '</p><p class="muted">' + esc(p.neighborhood || "Neighborhood not provided") + ' · ' + esc(p.cuisine || "Cuisine not provided") + '</p></div>' +
-      '<div class="profile-actions"><button type="button" class="button" data-save="' + p.id + '" aria-pressed="' + state.saved.includes(p.id) + '">' + (state.saved.includes(p.id) ? "♥ Saved" : "♡ Save place") + '</button><a class="button secondary" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address || p.name + ", Chicago") + '" target="_blank" rel="noopener noreferrer">Get directions ↗</a>' + website + '</div>' +
+      '<div class="profile-actions"><button type="button" class="button" data-save="' + p.id + '" aria-pressed="' + state.saved.includes(p.id) + '">' + (state.saved.includes(p.id) ? "♥ Saved" : "♡ Save place") + '</button><a class="button secondary" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address || p.name) + '" target="_blank" rel="noopener noreferrer">Get directions ↗</a>' + website + '</div>' +
       '<section class="info-card"><p class="eyebrow">FACILITY TYPE</p><h3>' + esc(facility(p)) + '</h3><p>' + esc(p.dedicatedDescription || "Further details about the facility type have not been provided.") + '</p><p><strong>Shared equipment:</strong> ' + esc(p.sharedEquipment || "Not provided") + '</p><p><strong>Cross-contact procedures:</strong> ' + esc(p.crossContactProcedures || "Not provided") + '</p></section>' +
       '<section class="info-card"><p class="eyebrow">EVIDENCE AVAILABLE</p><h3>What is currently known</h3><p>' + esc(p.menu || p.description || "Not provided") + '</p><p>' + esc(p.practices || "Not provided") + '</p><p><strong>Evidence scope:</strong> ' + esc(p.evidenceScope || "Not provided") + '</p><p><strong>Document review history:</strong> ' + esc(p.reviewDate || "Not provided") + '</p><p><strong>What this does not establish:</strong> ' + esc(p.evidenceLimitations || S.disclaimer) + '</p><p><strong>Source last checked:</strong> ' + esc(p.sourceChecked || "Not yet checked") + '</p><p><strong>Direct confirmation date:</strong> ' + esc(p.lastConfirmedDate || "Not confirmed directly") + '</p><p><strong>Operating status:</strong> ' + esc(p.operatingStatus || "Not yet confirmed") + '</p>' + staleWarning + source + '</section>' +
       '<section class="info-card"><p class="eyebrow">ON-SITE AUDIT · SEPARATE FROM EVIDENCE CATEGORY</p><h3>Visit and audit status</h3>' + audit + '<p>No approved on-site audit record is available unless a dated record is explicitly shown here.</p></section>' +
-      '<section class="info-card"><p class="eyebrow">BEFORE ORDERING</p><h3>Questions to ask the restaurant</h3><ul class="question-list">' + questions.map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + '</ul><p class="muted">Suggestions only, not medical advice.</p></section><p class="disclaimer-inline">' + esc(S.disclaimer) + '</p>';
+      '<section class="info-card"><p class="eyebrow">PREPARATION DETAILS</p><h3>What is not yet established</h3><ul class="question-list"><li>Whether current ingredients and suppliers have been checked for this location.</li><li>Whether fryers, utensils, surfaces or other equipment are shared.</li><li>Which cross-contact controls are currently used for gluten-free orders.</li></ul><p class="muted">These details are shown as unknown unless a dated, reliable source records them. No meal can be guaranteed safe.</p></section><p class="disclaimer-inline">' + esc(S.disclaimer) + '</p>';
   }
   function renderSaved() {
     var saved = places.filter(function (p) { return state.saved.includes(p.id); });
@@ -162,7 +162,7 @@
   }
   function renderOnboarding() {
     var slides = [
-      ["Find places and ask better questions.", "Explore Chicago listings, search by neighborhood and open each place’s profile."],
+      ["Explore wherever you are.", "Search the map for food places in your city or anywhere you travel."],
       ["Separate claims from evidence.", "See what restaurants say, what public sources state and what GlutenGuide has actually reviewed."],
       ["A label is never a guarantee.", "Confirm ingredients, shared equipment and cross-contact procedures directly with the restaurant."]
     ];
@@ -442,7 +442,7 @@
     state.mapFailed = false;
     if (state.map) { try { state.map.remove(); } catch (e) {} state.map = null; state.markers.clear(); }
     if (!state.userLocation) state.userLocation = readMapLocation();
-    state.map = L.map("map", { scrollWheelZoom: false }).setView(state.userLocation || [41.91, -87.66], state.userLocation ? 14 : 4);
+    state.map = L.map("map", { scrollWheelZoom: false }).setView(state.userLocation || [20, 0], state.userLocation ? 14 : 2);
     var tiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>' }).addTo(state.map);
     tiles.on("tileerror", function () {
       if (mapEl.querySelector(".tile-error")) return;
