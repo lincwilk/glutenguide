@@ -3,6 +3,7 @@ const restaurants = [
     id: 1, name: "Wheat's End Cafe & Bakery", neighborhood: "Lakeview · 543 W Diversey Pkwy",
     address: "543 W Diversey Pkwy, Chicago, IL 60614",
     lat: 41.9321, lng: -87.6438, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    dedicatedDescription: "The venue publicly describes its facility as dedicated gluten-free.",
     sourceUrl: "https://wheatsendcafe.com/", sourceLabel: "Wheat’s End official website", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
     description: "Cafe and bakery known for a fully gluten-free menu.",
     cuisine: "Cafe · Bakery", icon: "🥐", rating: "Real venue",
