@@ -58,6 +58,18 @@ const restaurants = [
     practices: "A gluten-free menu label does not establish that cross-contact is prevented. GlutenGuide has not independently reviewed the restaurant's procedures.",
     questions: ["Which dishes can be prepared for someone with celiac disease?", "Are shared fryers, grills, or utensils used?", "Can staff confirm ingredients and cross-contact procedures?"],
     reviewDate: "GlutenGuide has not independently verified this information."
+  },
+  {
+    id: 6, name: "Defloured: A Gluten-Free Bakery", neighborhood: "Andersonville · 1477 W Balmoral Ave",
+    address: "1477 W Balmoral Ave, Chicago, IL 60640",
+    lat: 41.9794, lng: -87.6675, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    sourceUrl: "https://www.deflouredbakery.com/faqs", sourceLabel: "Defloured official FAQ", sourceChecked: "2026-10-21",
+    description: "Bakery whose official FAQ says its products are gluten-free and made in a dedicated gluten-free facility.",
+    cuisine: "Bakery · Desserts", icon: "🧁", rating: "Venue statement",
+    menu: "The bakery’s official FAQ says its products are gluten-free and made in a 100% dedicated gluten-free facility. The menu changes; confirm current products and other allergens directly.",
+    practices: "The venue publicly describes its facility as dedicated gluten-free. GlutenGuide has not independently reviewed or audited the bakery. The venue also notes that nuts are used in the facility.",
+    questions: ["Are all current products made in the dedicated gluten-free facility?", "What other allergens are handled in the bakery?", "Have ingredients, suppliers, or preparation practices changed recently?"],
+    reviewDate: "Official FAQ consulted 2026-10-21; no independent GlutenGuide review recorded."
   }
 ];
 
