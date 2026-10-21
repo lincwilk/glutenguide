@@ -9,7 +9,7 @@
   var bottomNav = document.getElementById("bottomNav");
   var railNav = document.getElementById("railNav");
   var toast = document.getElementById("toast");
-  var state = { query: "", filter: "all", selectedPlace: null, map: null, markers: new Map(), session: null, preferences: [], saved: [], notes: [], onboarding: 0, mapSheetOpen: true, mapFailed: false, userLocation: null };
+  var state = { query: "", filter: "all", selectedPlace: null, map: null, markers: new Map(), session: null, preferences: [], saved: [], notes: [], onboarding: 0, mapSheetOpen: true, mapFailed: false, userLocation: null, osmPlaces: [], osmLayer: null, osmTimer: null };
   var storageAvailable = true;
   var storageKey = "gg-demo-session-v1";
   var navItems = [
@@ -123,7 +123,7 @@
   }
   function renderMap() {
     var items = filterPlaces(places);
-    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Venue coverage depends on available map data.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Nearby listings</h2><span class="muted">' + items.length + ' places</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
+    return '<section class="map-screen"><div class="map-tools"><form id="regionSearch" class="region-search"><label class="sr-only" for="regionQuery">Search a city or region worldwide</label><input id="regionQuery" type="search" placeholder="Search any city or region" autocomplete="off"><button type="submit" class="button">Search region</button></form><button type="button" class="button secondary" id="locateMe">◎ Use my location</button><span class="muted" id="locationStatus">Search any region. Nearby food places load from OpenStreetMap.</span></div><div id="map" class="map-canvas" role="region" aria-label="Map; currently curated venue listings are in Chicago"></div><div class="map-sheet ' + (state.mapSheetOpen ? "sheet-open" : "sheet-collapsed") + '"><button type="button" class="sheet-handle" id="sheetToggle" aria-expanded="' + state.mapSheetOpen + '"><span></span><span class="sr-only">Toggle restaurant list</span></button><div class="section-row"><h2>Places on this map</h2><span class="muted" id="osmCount">Loading map places…</span></div><div id="osmPlaceList" class="osm-place-list"><p class="muted">Move the map or search a region to load nearby food places.</p></div><div class="section-row"><h2>GlutenGuide listings</h2><span class="muted">' + items.length + ' curated</span></div><label class="search-box compact"><span aria-hidden="true">⌕</span><span class="sr-only">Search map results</span><input id="mapSearch" type="search" value="' + esc(state.query) + '" placeholder="Search places"></label>' + filters() + (state.mapFailed ? '<div class="map-error"><strong>The interactive map could not load.</strong><p>You can still browse every listing below.</p></div>' : '') + listMarkup(items) + '</div></section>';
   }
   function renderPlace(id) {
     var p = places.find(function (x) { return x.id === id; });
@@ -384,7 +384,46 @@
       else state.map.removeLayer(marker);
     });
   }
-  function initMap() {
+
+  function loadOsmPlaces() {
+    if (!state.map) return;
+    window.clearTimeout(state.osmTimer);
+    state.osmTimer = window.setTimeout(function () {
+      var b = state.map.getBounds();
+      var status = document.getElementById("osmCount");
+      if (b.getNorth() - b.getSouth() > 1.5 || b.getEast() - b.getWest() > 1.5) {
+        if (status) status.textContent = "Zoom in to load nearby places";
+        return;
+      }
+      var box = b.getSouth() + "," + b.getWest() + "," + b.getNorth() + "," + b.getEast();
+      var query = '[out:json][timeout:20];(nwr["amenity"~"^(restaurant|cafe|fast_food|food_court|ice_cream)$"](' + box + '););out center tags;';
+      if (status) status.textContent = "Loading…";
+      fetch("https://overpass-api.de/api/interpreter", {method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:"data="+encodeURIComponent(query)})
+      .then(function(res){if(!res.ok)throw new Error("unavailable");return res.json();})
+      .then(function(data){
+        state.osmPlaces=(data.elements||[]).map(function(el){
+          var t=el.tags||{},lat=el.lat,lon=el.lon;
+          if(typeof lat!=="number"&&el.center){lat=el.center.lat;lon=el.center.lon;}
+          return {id:el.type+"/"+el.id,name:t.name||t["name:en"]||"Unnamed food place",lat:lat,lon:lon,type:t.amenity||"food",cuisine:t.cuisine||"",address:[t["addr:street"],t["addr:housenumber"],t["addr:city"]].filter(Boolean).join(" "),glutenFree:t["diet:gluten_free"]||"",url:"https://www.openstreetmap.org/"+el.type+"/"+el.id};
+        }).filter(function(p){return typeof p.lat==="number"&&typeof p.lon==="number";});
+        if(!state.osmLayer)state.osmLayer=L.layerGroup().addTo(state.map);else state.osmLayer.clearLayers();
+        state.osmPlaces.forEach(function(p){
+          var gf=p.glutenFree==="yes"?"<br><strong>OpenStreetMap tag:</strong> gluten-free=yes (not a safety certification)":"";
+          L.marker([p.lat,p.lon]).bindPopup("<strong>"+esc(p.name)+"</strong><br>"+esc(p.type.replace("_"," "))+(p.cuisine?"<br>"+esc(p.cuisine):"")+gf+'<br><a href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">OpenStreetMap details</a>').addTo(state.osmLayer);
+        });
+        var list=document.getElementById("osmPlaceList");
+        if(list)list.innerHTML=state.osmPlaces.length?state.osmPlaces.slice(0,60).map(function(p){
+          return '<article class="osm-place"><strong>'+esc(p.name)+'</strong><span class="muted">'+esc(p.type.replace("_"," "))+(p.cuisine?" · "+esc(p.cuisine):"")+'</span>'+(p.address?'<span class="muted">'+esc(p.address)+'</span>':"")+(p.glutenFree==="yes"?'<span class="status-badge status-declared">OSM tag says gluten-free · not verified</span>':'<span class="status-badge status-unknown">Gluten-free safety not established</span>')+'<a href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">Source: OpenStreetMap ↗</a></article>';
+        }).join(""):'<p class="muted">No food places found in this map area. Try moving or zooming the map.</p>';
+        if(status)status.textContent=state.osmPlaces.length+" food places from OpenStreetMap";
+      }).catch(function(){
+        if(status)status.textContent="Live map data temporarily unavailable";
+        var list=document.getElementById("osmPlaceList");
+        if(list)list.innerHTML='<p class="muted">Could not load live food places. Try again later; map browsing still works.</p>';
+      });
+    },600);
+  }
+\n  function initMap() {
     var mapEl = document.getElementById("map");
     if (!mapEl) return;
     if (!window.L) {
@@ -410,13 +449,13 @@
       });
       state.markers.set(p.id, marker);
     });
-    window.setTimeout(function () { if (state.map) state.map.invalidateSize(true); }, 180);
+    window.setTimeout(function () { if (state.map) { state.map.invalidateSize(true); loadOsmPlaces(); } }, 180);\n    state.map.on("moveend", loadOsmPlaces);
     syncMapMarkers();
   }
   headerBack.addEventListener("click", function () { history.back(); });
   headerAction.addEventListener("click", function () { go("map"); });
   window.addEventListener("hashchange", render);
-  window.addEventListener("resize", function () { if (state.map) window.setTimeout(function () { state.map.invalidateSize(true); }, 100); });
+  window.addEventListener("resize", function () { if (state.map) window.setTimeout(function () { state.map.invalidateSize(true); loadOsmPlaces(); }, 100); });
   readSession();
   if (!location.hash) {
     go("splash", true);
