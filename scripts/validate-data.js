@@ -3,9 +3,9 @@ const vm = require("node:vm");
 const assert = require("node:assert/strict");
 
 const source = fs.readFileSync("data.js", "utf8");
-const match = source.match(/const restaurants = (\[[\s\S]*?\n\]);/);
-assert.ok(match, "Restaurant data array must exist in data.js");
-const restaurants = vm.runInNewContext(match[1]);
+const context = { window: {} };
+vm.runInNewContext(source, context);
+const restaurants = context.window.restaurants;
 assert.ok(Array.isArray(restaurants) && restaurants.length > 0, "Venue data must be a non-empty array");
 
 const ids = restaurants.map((v) => v.id);
