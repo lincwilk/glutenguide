@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#143e35">
+  <meta name="description" content="A prototype for discovering gluten-aware dining options in Chicago. Sample data only.">
+  <title>GlutenGuide — Find your next table</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="GlutenGuide home">
+      <span class="brand-mark" aria-hidden="true">G</span>
+      <span>Gluten<span class="brand-light">Guide</span></span>
+    </a>
+    <span class="prototype-pill">DEMO · SAMPLE DATA</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">EAT OUT WITH MORE CLARITY</p>
+        <h1>Find a table.<br><em>Ask better questions.</em></h1>
+        <p class="hero-description">Explore gluten-aware dining information and community experiences in Chicago.</p>
+        <div class="search-wrap">
+          <span aria-hidden="true">⌕</span>
+          <label class="sr-only" for="search">Search restaurants or neighborhoods</label>
+          <input id="search" type="search" placeholder="Restaurant or neighborhood…" autocomplete="off">
+          <button id="searchButton" class="search-button">Search</button>
+        </div>
+        <p class="hero-note">Prototype only — these sample places are fictional.</p>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-circle circle-one"></div><div class="art-circle circle-two"></div>
+        <div class="plate"><div class="plate-center">GF</div></div>
+        <span class="art-leaf leaf-one">✦</span><span class="art-leaf leaf-two">✳</span>
+      </div>
+    </section>
+
+    <section class="content-section" aria-labelledby="explore-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CHICAGO · DEMO AREA</p>
+          <h2 id="explore-title">Explore places</h2>
+        </div>
+        <span id="resultCount" class="result-count">4 sample places</span>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
+        <button class="filter active" data-filter="all" aria-pressed="true">All places</button>
+        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Documentation reviewed</button>
+        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant reported</button>
+        <button class="filter" data-filter="unknown" aria-pressed="false"><span class="dot dot-gray"></span> Limited information</button>
+      </div>
+
+      <div class="explore-grid">
+        <section class="map-panel" aria-label="Illustrative restaurant map">
+          <div class="map-topline"><span><span class="live-dot"></span> CHICAGO AREA</span><span class="map-caption">Illustrative map · not for navigation</span></div>
+          <div class="illustrative-map" id="map">
+            <div class="map-water"></div>
+            <div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div>
+            <div class="road road-d"></div><div class="road road-e"></div><div class="road road-f"></div>
+            <span class="map-label label-west-loop">WEST LOOP</span><span class="map-label label-river-north">RIVER NORTH</span><span class="map-label label-loop">THE LOOP</span>
+            <button class="map-pin pin-1 selected" data-id="1" aria-label="View sample restaurant 1"><span>1</span></button>
+            <button class="map-pin pin-2" data-id="2" aria-label="View sample restaurant 2"><span>2</span></button>
+            <button class="map-pin pin-3" data-id="3" aria-label="View sample restaurant 3"><span>3</span></button>
+            <button class="map-pin pin-4" data-id="4" aria-label="View sample restaurant 4"><span>4</span></button>
+            <div class="map-disclaimer">Illustration only — pins do not reflect real addresses.</div>
+          </div>
+          <div class="map-legend"><span><i class="dot dot-green"></i> Reviewed information</span><span><i class="dot dot-amber"></i> Restaurant-reported</span><span><i class="dot dot-gray"></i> Limited information</span></div>
+        </section>
+
+        <section class="restaurant-list" id="restaurantList" aria-label="Restaurant sample results"></section>
+      </div>
+    </section>
+
+    <section class="trust-section">
+      <div class="trust-intro"><p class="eyebrow">CLARITY MATTERS</p><h2>Know what the label means.</h2><p>We separate documented information, restaurant statements, and customer experiences instead of treating them as the same thing.</p></div>
+      <div class="trust-cards">
+        <article class="trust-card"><span class="status-icon green-icon">✓</span><h3>Documentation reviewed</h3><p>In a future release, this will mean specified evidence was reviewed against published criteria. It is not a promise of zero risk.</p></article>
+        <article class="trust-card"><span class="status-icon amber-icon">↗</span><h3>Restaurant reported</h3><p>The restaurant says it has gluten-free options. Its preparation controls have not yet been reviewed in this prototype.</p></article>
+        <article class="trust-card"><span class="status-icon gray-icon">?</span><h3>Limited information</h3><p>There isn't enough current information to assess the restaurant's practices. Ask the restaurant directly.</p></article>
+      </div>
+    </section>
+
+    <section class="feedback-section" id="feedback">
+      <div class="feedback-copy"><p class="eyebrow">HELP SHAPE THE PRODUCT</p><h2>Share a demo review</h2><p>Try the feedback flow. This demo stores reviews only in your current browser session; it does not publish them to other people.</p></div>
+      <form id="reviewForm" class="review-form">
+        <label for="reviewRestaurant">Sample restaurant</label>
+        <select id="reviewRestaurant" required>
+          <option value="1">Green Fork Kitchen (fictional)</option>
+          <option value="2">Lakeview Table (fictional)</option>
+          <option value="3">Juniper & Grain (fictional)</option>
+          <option value="4">City Corner Café (fictional)</option>
+        </select>
+        <label for="reviewType">What are you sharing?</label>
+        <select id="reviewType" required>
+          <option value="experience">Visit experience</option>
+          <option value="question">Question I asked staff</option>
+          <option value="update">Information update</option>
+        </select>
+        <label for="reviewText">Your note</label>
+        <textarea id="reviewText" maxlength="500" rows="4" placeholder="Describe what the staff told you or what you experienced…" required></textarea>
+        <p class="form-note">Please don't include medical diagnoses or claim that symptoms prove exposure. Don't post private information.</p>
+        <button class="primary-button" type="submit">Add demo review</button>
+        <p id="formMessage" class="form-message" role="status"></p>
+        <div id="reviewOutput" class="review-output" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#"><span class="brand-mark">G</span><span>Gluten<span class="brand-light">Guide</span></span></a>
+    <p>Built to make food information clearer — never to promise zero risk.</p>
+    <p class="footer-disclaimer">All restaurants, reviews and map pins in this demonstration are fictional. Do not use this demo to make food-safety decisions.</p>
+  </footer>
+
+  <dialog id="restaurantDialog" class="restaurant-dialog">
+    <button class="dialog-close" id="dialogClose" aria-label="Close restaurant details">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
