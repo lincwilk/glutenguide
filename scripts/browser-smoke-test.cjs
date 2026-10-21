@@ -28,10 +28,16 @@ async function main() {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   const errors = [];
+  const failedRequests = [];
   page.on("pageerror", error => errors.push(error.message));
+  page.on("requestfailed", request => failedRequests.push(request.url() + " — " + request.failure()?.errorText));
   try {
     await page.goto("http://127.0.0.1:4173/", { waitUntil: "domcontentloaded" });
-    await page.waitForFunction(() => document.querySelectorAll("#restaurantList .restaurant-card").length === 6);
+    try {
+      await page.waitForFunction(() => document.querySelectorAll("#restaurantList .restaurant-card").length === 6, null, { timeout: 10000 });
+    } catch (error) {
+      throw new Error("Initial venue cards did not render. pageErrors=" + JSON.stringify(errors) + "; failedRequests=" + JSON.stringify(failedRequests) + "; body=" + (await page.locator("body").innerText()).slice(0, 1200));
+    }
     if (!(await page.locator("#map.leaflet-container").count())) {
       await page.waitForSelector("#map.leaflet-container", { timeout: 15000 });
     }
