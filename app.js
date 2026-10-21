@@ -317,7 +317,7 @@
           if (!results.length) { if (status) status.textContent = "No matching region found. Try a nearby city."; return; }
           state.userLocation = [Number(results[0].lat), Number(results[0].lon)];
           if (state.map) state.map.setView(state.userLocation, 12);
-          if (status) status.textContent = "Map centered on " + results[0].display_name + ". Curated restaurant profiles remain limited; map coverage depends on OpenStreetMap data.";
+          if (status) status.textContent = "Map centered on " + results[0].display_name + ". Loading nearby food places from OpenStreetMap.";
         }).catch(function () { if (status) status.textContent = "Region search is temporarily unavailable. You can still move the map manually."; })
         .finally(function () { submit.disabled = false; });
     });
@@ -326,7 +326,7 @@
       var status = document.getElementById("locationStatus");
       if (!navigator.geolocation) { if (status) status.textContent = "Location is not supported by this browser."; return; }
       locate.disabled = true; if (status) status.textContent = "Requesting location permission…";
-      navigator.geolocation.getCurrentPosition(function (pos) { state.userLocation = [pos.coords.latitude, pos.coords.longitude]; if (state.map) state.map.setView(state.userLocation, 13); locate.disabled = false; if (status) status.textContent = "Map centered on your location. Curated listings currently cover Chicago."; }, function () { locate.disabled = false; if (status) status.textContent = "Location unavailable or permission denied. Move the map manually."; }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+      navigator.geolocation.getCurrentPosition(function (pos) { state.userLocation = [pos.coords.latitude, pos.coords.longitude]; if (state.map) state.map.setView(state.userLocation, 13); locate.disabled = false; if (status) status.textContent = "Map centered on your location. Loading nearby food places from OpenStreetMap."; }, function () { locate.disabled = false; if (status) status.textContent = "Location unavailable or permission denied. Move the map manually."; }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
     });
     var toggle = document.getElementById("sheetToggle");
     if (toggle) toggle.addEventListener("click", function () { state.mapSheetOpen = !state.mapSheetOpen; var sheet = root.querySelector(".map-sheet"); sheet.classList.toggle("sheet-open", state.mapSheetOpen); sheet.classList.toggle("sheet-collapsed", !state.mapSheetOpen); toggle.setAttribute("aria-expanded", String(state.mapSheetOpen)); });
@@ -398,8 +398,12 @@
       var box = b.getSouth() + "," + b.getWest() + "," + b.getNorth() + "," + b.getEast();
       var query = '[out:json][timeout:20];(nwr["amenity"~"^(restaurant|cafe|fast_food|food_court|ice_cream)$"](' + box + '););out center tags;';
       if (status) status.textContent = "Loading…";
-      fetch("https://overpass-api.de/api/interpreter", {method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:"data="+encodeURIComponent(query)})
-      .then(function(res){if(!res.ok)throw new Error("unavailable");return res.json();})
+      (function requestOverpass(endpoints) {
+        if (!endpoints.length) return Promise.reject(new Error("Map data unavailable"));
+        return fetch(endpoints[0] + "?data=" + encodeURIComponent(query), {headers:{"Accept":"application/json"}})
+          .then(function(res){if(!res.ok)throw new Error("unavailable");return res.json();})
+          .catch(function(){return requestOverpass(endpoints.slice(1));});
+      })(["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://overpass.private.coffee/api/interpreter"])
       .then(function(data){
         state.osmPlaces=(data.elements||[]).map(function(el){
           var t=el.tags||{},lat=el.lat,lon=el.lon;
@@ -423,7 +427,8 @@
       });
     },600);
   }
-\n  function initMap() {
+
+  function initMap() {
     var mapEl = document.getElementById("map");
     if (!mapEl) return;
     if (!window.L) {
