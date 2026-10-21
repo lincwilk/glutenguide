@@ -43,13 +43,16 @@ async function main() {
     await page.locator('[data-filter="all"]').click();
     await page.locator(".place-card").first().locator("[data-save]").click();
     await page.locator('a[href="#/saved"]:visible').click();
+    await page.getByRole("heading", { name: "Saved places" }).waitFor();
     if (await page.locator(".place-card").count() !== 1) throw new Error("Saved places should update for the current session. route=" + page.url() + "; cards=" + await page.locator(".place-card").count() + "; session=" + await page.evaluate(() => sessionStorage.getItem("gg-demo-session-v1")) + "; screen=" + (await page.locator("#screen-content").innerText()).slice(0, 500));
     await page.locator('a[href="#/home"]:visible').click();
+    await page.getByRole("heading", { name: "Hi, Guest" }).waitFor();
     await page.locator(".place-card").first().click();
     await page.getByText("GlutenGuide has not visited this restaurant.", { exact: true }).waitFor();
     await page.getByRole("heading", { name: "Questions to ask the restaurant" }).waitFor();
     await page.locator("[data-back]").click();
     await page.locator('a[href="#/community"]:visible').click();
+    await page.getByRole("heading", { name: "Share an experience" }).waitFor();
     await page.locator("#experiencePlace").selectOption({ index: 1 });
     await page.locator("#experienceNote").fill("<img src=x onerror=alert(1)> session test");
     await page.getByRole("button", { name: "Add session note" }).click();
@@ -57,6 +60,7 @@ async function main() {
     if (await page.locator("#sessionNotes img").count()) throw new Error("User note must be rendered as text, not HTML.");
     if (!(await page.locator("#sessionNotes").getByText(/<img src=x onerror=alert\(1\)>/).count())) throw new Error("User text should be displayed literally.");
     await page.locator('a[href="#/profile"]:visible').click();
+    await page.getByRole("heading", { name: "Guest" }).waitFor();
     await page.getByRole("button", { name: "Sign out of demo" }).click();
     await page.getByRole("heading", { name: "Welcome to GlutenGuide" }).waitFor();
     await page.getByRole("button", { name: "Sign in (demo)" }).click();
