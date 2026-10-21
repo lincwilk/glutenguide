@@ -79,6 +79,7 @@ let searchTerm = "";
 let selectedId = 1;
 const sessionReviews = [];
 const list = document.getElementById("restaurantList");
+const dedicatedList = document.getElementById("dedicatedList");
 const resultCount = document.getElementById("resultCount");
 const searchInput = document.getElementById("search");
 const dialog = document.getElementById("restaurantDialog");
