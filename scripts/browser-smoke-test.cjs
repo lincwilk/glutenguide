@@ -32,7 +32,7 @@ async function main() {
     await page.getByRole("button", { name: "Continue as guest" }).click();
     await page.getByRole("heading", { name: "Dietary preferences" }).waitFor();
     await page.getByRole("button", { name: "Skip for now" }).click();
-    await page.getByRole("heading", { name: "Find a place to eat" }).waitFor();
+    await page.getByRole("heading", { name: "Hi, Guest" }).waitFor();
     const initialCards = await page.locator(".place-card").count();
     if (initialCards < 5) throw new Error("Expected the existing venue dataset to render; found " + initialCards);
     await page.locator("#searchInput").fill("Defloured");
