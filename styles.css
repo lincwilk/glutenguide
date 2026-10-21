@@ -54,3 +54,14 @@
 @media(max-width:800px){.audit-grid,.dedicated-grid{grid-template-columns:1fr}.audit-example{align-items:flex-start;flex-direction:column}.audit-intro h2{font-size:30px}}
 
 .status-badge.preliminary{background:#edf0ed;color:#58655e}
+
+/* Accessibility and evidence-source refinements */
+.skip-link{position:absolute;left:16px;top:-60px;z-index:10000;padding:10px 14px;border-radius:8px;background:var(--lime);color:var(--forest);font-weight:700}
+.skip-link:focus{top:12px}
+.topbar-link{font-size:12px;font-weight:700;color:var(--forest);text-underline-offset:4px}
+.topbar-link:hover{text-decoration:underline}
+:where(a,button,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #d69a32!important;outline-offset:3px}
+.restaurant-card:focus-visible{border-color:#a66a12;transform:translateY(-1px)}
+.map-access-note{margin:0;padding:10px 15px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+.source-section a{display:inline-block;margin-top:8px;color:var(--forest);font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.topbar-link{font-size:10px}.map-access-note{font-size:10px}}
