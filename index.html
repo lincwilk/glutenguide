@@ -54,8 +54,9 @@
       </div>
       <div class="filter-row" role="group" aria-label="Filter restaurants by information status">
         <button class="filter active" data-filter="all" aria-pressed="true">All venues</button>
-        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Dedicated GF kitchen reported</button>
-        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> GF options reported</button>
+        <button class="filter" data-filter="reviewed" aria-pressed="false"><span class="dot dot-green"></span> Documented review (none yet)</button>
+        <button class="filter" data-filter="declared" aria-pressed="false"><span class="dot dot-amber"></span> Restaurant-reported</button>
+        <button class="filter" data-filter="preliminary" aria-pressed="false"><span class="dot dot-gray"></span> Public info · unverified</button>
         <button class="filter" data-filter="unknown" aria-pressed="false"><span class="dot dot-gray"></span> Limited information</button>
       </div>
 
@@ -63,7 +64,7 @@
         <section class="map-panel" aria-label="Interactive map of real Chicago restaurants">
           <div class="map-topline"><span><span class="live-dot"></span> CHICAGO · INTERACTIVE MAP</span><span class="map-caption">Drag and zoom · Select a marker</span></div>
           <div id="map" class="real-map" role="application" aria-label="Map showing restaurant locations in Chicago"></div>
-          <div class="map-legend"><span><i class="dot dot-green"></i> Dedicated gluten-free kitchen reported</span><span><i class="dot dot-amber"></i> Gluten-free options reported</span><span><i class="dot dot-gray"></i> Limited information</span></div>
+          <div class="map-legend"><span><i class="dot dot-green"></i> Documented review (none yet)</span><span><i class="dot dot-amber"></i> Restaurant-reported</span><span><i class="dot dot-gray"></i> Public info · unverified / limited information</span></div>
         </section>
 
         <section class="restaurant-list" id="restaurantList" aria-label="Restaurant sample results"></section>
@@ -143,6 +144,10 @@
     <section class="category-definition">
       <span class="status-badge declared">Restaurant-reported</span>
       <p><strong>The restaurant says it offers gluten-free options or follows certain procedures.</strong> This is a statement, not an independent review. Ask about ingredients, shared equipment, preparation surfaces, and cross-contact.</p>
+    </section>
+    <section class="category-definition">
+      <span class="status-badge preliminary">Public information found · unverified</span>
+      <p><strong>We found public information, but have not confirmed it directly with the restaurant.</strong> This is a provisional research label, not a restaurant statement and not an audit.</p>
     </section>
     <section class="category-definition">
       <span class="status-badge unknown">Limited information</span>
