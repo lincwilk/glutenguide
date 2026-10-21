@@ -16,6 +16,7 @@
     { id: "home", label: "Explore", icon: "⌕" },
     { id: "map", label: "Map", icon: "⌖" },
     { id: "saved", label: "Saved", icon: "♡" },
+    { id: "community", label: "Community", icon: "◌" },
     { id: "profile", label: "Profile", icon: "○" }
   ];
   function esc(value) {
@@ -52,9 +53,9 @@
   }
   function go(path, replace) {
     var hash = "#/" + path;
-    if (location.hash === hash) render();
-    else if (replace) location.replace(hash);
-    else location.hash = hash;
+    if (location.hash === hash) { render(); }
+    else if (replace) { location.replace(hash); render(); }
+    else { location.hash = hash; }
   }
   function showToast(message) {
     toast.textContent = message;
