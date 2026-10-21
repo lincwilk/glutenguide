@@ -8,10 +8,11 @@ No badge, review, document review or customer report can guarantee that an indiv
 
 ## Separate information types
 
-1. **Restaurant-reported** — the venue has stated that it offers gluten-free options. Record the statement, source and date.
-2. **Documentation reviewed** — specific documents and procedures were examined against published criteria by an identified reviewer. Record the scope, reviewer role, evidence date, gaps and next review date. This is not a guarantee.
-3. **Limited information** — information is missing, stale, contradictory or inadequate to assess the listed practices.
-4. **Community experience** — a customer report of their own interaction or visit. It is not proof of kitchen practices or food composition.
+1. **Public information found** — a public page or listing contains a relevant claim, but the venue has not directly confirmed it to GlutenGuide. Record the exact source and date checked. Do not label it restaurant-reported solely because the source is the venue’s website.
+2. **Restaurant-reported** — the venue has directly supplied or confirmed the information to GlutenGuide. Record who confirmed it, the statement, source, and date.
+3. **Evidence reviewed** — specific documents or procedures were examined against published criteria by an identified reviewer. Record the scope, reviewer role, evidence date, gaps, findings, and next review date. This is not a guarantee.
+4. **Limited information** — information is missing, stale, contradictory, or inadequate to assess the listed practices.
+5. **Community experience** — a customer report of their own interaction or visit. It is not proof of kitchen practices or food composition.
 
 ## Evidence and review workflow (to design)
 
