@@ -1,7 +1,7 @@
 {
   "name": "GlutenGuide",
   "short_name": "GlutenGuide",
-  "description": "Explore Chicago restaurants with transparent gluten-free dining information.",
+  "description": "Explore gluten-free dining information worldwide with transparent evidence labels.",
   "start_url": "./#/home",
   "scope": "./",
   "display": "standalone",
