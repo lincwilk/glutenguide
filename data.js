@@ -2,7 +2,7 @@ const restaurants = [
   {
     id: 1, name: "Wheat's End Cafe & Bakery", neighborhood: "Lakeview · 543 W Diversey Pkwy",
     address: "543 W Diversey Pkwy, Chicago, IL 60614",
-    lat: 41.9321, lng: -87.6438, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    lat: 41.9321, lng: -87.6438, dedicatedGF: true,
     dedicatedDescription: "The venue publicly describes its facility as dedicated gluten-free.",
     sourceUrl: "https://wheatsendcafe.com/", sourceLabel: "Wheat’s End official website", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
     description: "Cafe and bakery known for a fully gluten-free menu.",
@@ -15,7 +15,7 @@ const restaurants = [
   {
     id: 2, name: "CheSa's Bistro & Bar", neighborhood: "Avondale · 3235 W Addison St",
     address: "3235 W Addison St, Suite C, Chicago, IL 60618",
-    lat: 41.9463, lng: -87.7094, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    lat: 41.9463, lng: -87.7094, dedicatedGF: true,
     sourceUrl: "https://chesasbistro.com/about", sourceLabel: "CheSa’s official website", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
     description: "Cajun-Creole and Southern comfort food; public listings describe a gluten-free kitchen.",
     cuisine: "Cajun-Creole · Southern", icon: "🍲", rating: "Real venue",
@@ -27,7 +27,7 @@ const restaurants = [
   {
     id: 3, name: "Brightwok Kitchen", neighborhood: "The Loop · 21 E Adams St",
     address: "21 E Adams St, Chicago, IL 60603",
-    lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
+    lat: 41.8794, lng: -87.6274, dedicatedGF: false,
     sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
     description: "Asian-inspired fast-casual food with publicly listed gluten-free options.",
     cuisine: "Asian-inspired · Bowls", icon: "🥗", rating: "Real venue",
@@ -39,7 +39,7 @@ const restaurants = [
   {
     id: 4, name: "BIBIBOP Asian Grill", neighborhood: "North Center area · 3304 N Western Ave",
     address: "3304 N Western Ave, Chicago, IL 60618",
-    lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level information · location not reviewed", dedicatedGF: false,
+    lat: 41.9414, lng: -87.6874, dedicatedGF: false,
     sourceUrl: "", sourceLabel: "Brand-level source link not yet recorded", sourceChecked: "", evidenceType: "brand_level_public_info",
     description: "Build-your-own bowls; public brand information describes a gluten-free menu.",
     cuisine: "Asian-inspired · Bowls", icon: "🍚", rating: "Real venue",
@@ -51,7 +51,7 @@ const restaurants = [
   {
     id: 5, name: "Andie's Restaurant", neighborhood: "Andersonville · 5253 N Clark St",
     address: "5253 N Clark St, Chicago, IL 60640",
-    lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
+    lat: 41.9762, lng: -87.6683, dedicatedGF: false,
     sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "", evidenceType: "public_listing",
     description: "Mediterranean and Middle Eastern restaurant with menu items publicly marked gluten-free.",
     cuisine: "Mediterranean · Middle Eastern", icon: "🫒", rating: "Real venue",
@@ -63,7 +63,7 @@ const restaurants = [
   {
     id: 6, name: "Defloured: A Gluten-Free Bakery", neighborhood: "Andersonville · 1477 W Balmoral Ave",
     address: "1477 W Balmoral Ave, Chicago, IL 60640",
-    lat: 41.9794, lng: -87.6675, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    lat: 41.9794, lng: -87.6675, dedicatedGF: true,
     sourceUrl: "https://www.deflouredbakery.com/faqs", sourceLabel: "Defloured official FAQ", sourceChecked: "2026-10-21", evidenceType: "public_venue_statement",
     description: "Bakery whose official FAQ says its products are gluten-free and made in a dedicated gluten-free facility.",
     cuisine: "Bakery · Desserts", icon: "🧁", rating: "Venue statement",
@@ -74,10 +74,29 @@ const restaurants = [
   }
 ];
 
-/* Facility type is a separate dimension from evidence status and audit status.
-   Only explicit dedicated-facility statements are represented as dedicated here. */
+/* Evidence status is derived from recorded evidence metadata, not a hand-entered badge.
+   Missing direct confirmation or review records must never be promoted to those categories. */
+function deriveEvidenceStatus(place) {
+  var review = place.documentReview;
+  if (review && review.approvalStatus === "approved" && review.reviewDate &&
+      Array.isArray(review.evidenceReviewed) && review.evidenceReviewed.length > 0 &&
+      review.scope && review.limitations) return "reviewed";
+  var confirmation = place.directConfirmation;
+  if (confirmation && confirmation.confirmedAt && confirmation.contactRole &&
+      confirmation.scope && confirmation.statement) return "declared";
+  var publicTypes = ["public_venue_statement", "public_listing", "brand_level_public_info"];
+  if (publicTypes.includes(place.evidenceType) && place.sourceUrl && place.sourceChecked) return "preliminary";
+  return "unknown";
+}
 restaurants.forEach(function (place) {
   if (!place.facilityType) place.facilityType = place.dedicatedGF === true ? "dedicated_facility" : "unknown";
+  place.documentReview = place.documentReview || null;
+  place.directConfirmation = place.directConfirmation || null;
+  place.status = deriveEvidenceStatus(place);
+  if (place.status === "reviewed") place.statusLabel = "Documented review";
+  else if (place.status === "declared") place.statusLabel = "Restaurant-reported / confirmed";
+  else if (place.status === "preliminary") place.statusLabel = "Public information found · unverified";
+  else place.statusLabel = "Limited information";
   if (!place.website) place.website = place.sourceUrl || "";
   if (!place.operatingStatus) place.operatingStatus = "Not yet confirmed";
   if (!place.sharedEquipment) place.sharedEquipment = "Not provided";
@@ -88,4 +107,5 @@ restaurants.forEach(function (place) {
   place.onSiteAudit = null;
 });
 
+window.deriveEvidenceStatus = deriveEvidenceStatus;
 window.restaurants = restaurants;
