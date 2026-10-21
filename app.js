@@ -16,7 +16,6 @@
     { id: "home", label: "Explore", icon: "⌕" },
     { id: "map", label: "Map", icon: "⌖" },
     { id: "saved", label: "Saved", icon: "♡" },
-    { id: "community", label: "Community", icon: "☷" },
     { id: "profile", label: "Profile", icon: "○" }
   ];
   function esc(value) {
