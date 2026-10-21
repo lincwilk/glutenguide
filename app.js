@@ -82,14 +82,41 @@ function filteredRestaurants() {
 function initMap() {
   const mapEl = document.getElementById("map");
   if (!window.L) {
-    mapEl.innerHTML = '<p class="map-error">The map library could not load. Check your internet connection and refresh the page.</p>';
+    // Try a second CDN in case the primary Leaflet host is blocked on this network.
+    if (mapEl.dataset.fallbackLoading === "1") return;
+    mapEl.dataset.fallbackLoading = "1";
+    const fallbackScript = document.createElement("script");
+    fallbackScript.src = "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js";
+    fallbackScript.onload = () => {
+      mapEl.dataset.fallbackLoading = "0";
+      initMap();
+      renderRestaurants();
+    };
+    fallbackScript.onerror = () => {
+      mapEl.innerHTML = '<div class="map-error"><strong>The interactive map could not load.</strong><br>Check that your browser or network is not blocking map resources, then refresh the page. You can still open restaurant details from the list.</div>';
+    };
+    document.head.appendChild(fallbackScript);
     return;
   }
   map = L.map("map").setView([41.91, -87.66], 11);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>'
   }).addTo(map);
+  let tileErrorShown = false;
+  tileLayer.on("tileerror", () => {
+    if (tileErrorShown) return;
+    tileErrorShown = true;
+    const notice = document.createElement("div");
+    notice.className = "map-error map-tile-error";
+    notice.textContent = "Map tiles are not loading on this connection. Try refreshing or disabling a network blocker for OpenStreetMap.";
+    mapEl.appendChild(notice);
+  });
+  tileLayer.on("tileload", () => {
+    const notice = mapEl.querySelector(".map-tile-error");
+    if (notice) notice.remove();
+    tileErrorShown = false;
+  });
   restaurants.forEach(place => {
     const marker = L.marker([place.lat, place.lng]).addTo(map);
     marker.bindPopup('<strong>' + escapeHtml(place.name) + '</strong><br>' + escapeHtml(place.address) + '<br><button type="button" class="popup-details" data-place-id="' + place.id + '">View details</button>');
@@ -98,6 +125,11 @@ function initMap() {
       if (button) button.addEventListener("click", () => openRestaurant(place.id));
     });
     markers.set(place.id, marker);
+  });
+  // Ensure Leaflet calculates the correct dimensions after desktop layout and browser resizing.
+  window.setTimeout(() => map && map.invalidateSize(true), 250);
+  window.addEventListener("resize", () => {
+    if (map) window.setTimeout(() => map.invalidateSize(true), 100);
   });
 }
 function escapeHtml(value) {
