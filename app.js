@@ -261,7 +261,7 @@ function openRestaurant(id) {
   dialogContent.appendChild(directions);
   const warning = document.createElement("div");
   warning.className = "dialog-warning";
-  warning.textContent = "Information sources and review status are shown in this profile. GlutenGuide has not independently verified this restaurant's current practices. Never assume an option is safe for celiac disease based on this listing alone; contact the restaurant directly.";
+  warning.textContent = "Information sources and review status are shown in this profile. Confirm current ingredients and preparation practices directly with the venue.";
   dialogContent.appendChild(warning);
   if (typeof dialog.showModal === "function") dialog.showModal();
   else alert("Restaurant details are available in the page. Please use a modern browser for the full demo.");
