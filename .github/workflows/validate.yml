@@ -21,3 +21,9 @@ jobs:
         run: node --check app.js
       - name: Validate venue evidence data
         run: node scripts/validate-data.js
+      - name: Install browser test dependency
+        run: npm install --no-save playwright@1.55.0
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Test key browser flows and mobile layout
+        run: node scripts/browser-smoke-test.cjs
