@@ -338,14 +338,3 @@ document.getElementById("categoryHelpDone").addEventListener("click", () => cate
 categoryHelpDialog.addEventListener("click", event => {
   if (event.target === categoryHelpDialog) categoryHelpDialog.close();
 });
-try {
-  if (!sessionStorage.getItem("glutenguide-category-guide-seen")) {
-    window.setTimeout(() => {
-      openCategoryHelp();
-      sessionStorage.setItem("glutenguide-category-guide-seen", "1");
-    }, 700);
-  }
-} catch (error) {
-  // If storage is unavailable, the visitor can still open the guide using the button.
-  window.setTimeout(openCategoryHelp, 700);
-}
