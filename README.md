@@ -6,7 +6,7 @@ GlutenGuide is a static, mobile-first restaurant discovery website for Chicago. 
 
 - Hash-based single-page navigation with Explore, Map, Saved, Community and Profile.
 - First-run splash, three onboarding cards, welcome, simulated sign-in/sign-up and optional dietary preferences.
-- Restaurant data is maintained in `data.js`; interface labels are centralized in `strings.js`.
+- Restaurant data is maintained in `data.js`; shared labels, evidence terminology and recurring safety copy are in `strings.js`. Some screen-specific copy remains beside its renderer in `app.js`.
 - Saved places, display name and optional preferences use sessionStorage where available. They are not synchronized to a server and normally reset when the tab closes. Password and email are not stored.
 - Community experiences are kept in memory for the current page session only and never alter a venue's evidence classification.
 - PWA manifest and SVG placeholder icon are included. A service worker is intentionally omitted to avoid serving stale restaurant information as though it were current.
