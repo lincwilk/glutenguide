@@ -85,6 +85,12 @@ const dialogContent = document.getElementById("dialogContent");
 const reviewSelect = document.getElementById("reviewRestaurant");
 let map;
 const markers = new Map();
+restaurants.forEach(place => {
+  const option = document.createElement("option");
+  option.value = String(place.id);
+  option.textContent = place.name;
+  reviewSelect.appendChild(option);
+});
 
 function statusClass(status) {
   return status === "reviewed" ? "reviewed" : status === "declared" ? "declared" : status === "preliminary" ? "preliminary" : "unknown";
