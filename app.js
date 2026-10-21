@@ -24,7 +24,7 @@ const restaurants = [
   {
     id: 3, name: "Brightwok Kitchen", neighborhood: "The Loop · 21 E Adams St",
     address: "21 E Adams St, Chicago, IL 60603",
-    lat: 41.8794, lng: -87.6274, status: "declared", statusLabel: "Gluten-free options reported",
+    lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public info found · not independently verified",
     description: "Asian-inspired fast-casual food with publicly listed gluten-free options.",
     cuisine: "Asian-inspired · Bowls", icon: "🥗", rating: "Real venue",
     menu: "Public information indicates gluten-free options are available. Menu items and preparation practices may change; check directly before ordering.",
@@ -35,7 +35,7 @@ const restaurants = [
   {
     id: 4, name: "BIBIBOP Asian Grill", neighborhood: "North Center area · 3304 N Western Ave",
     address: "3304 N Western Ave, Chicago, IL 60618",
-    lat: 41.9414, lng: -87.6874, status: "declared", statusLabel: "Brand reports GF menu · confirm this location",
+    lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level GF info · location not audited",
     description: "Build-your-own bowls; public brand information describes a gluten-free menu.",
     cuisine: "Asian-inspired · Bowls", icon: "🍚", rating: "Real venue",
     menu: "Public information describes gluten-free offerings. Verify this specific location, current ingredients, sauces, and handling procedures.",
@@ -46,7 +46,7 @@ const restaurants = [
   {
     id: 5, name: "Andie's Restaurant", neighborhood: "Andersonville · 5253 N Clark St",
     address: "5253 N Clark St, Chicago, IL 60640",
-    lat: 41.9762, lng: -87.6683, status: "declared", statusLabel: "Gluten-free options reported",
+    lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public info found · not independently verified",
     description: "Mediterranean and Middle Eastern restaurant with menu items publicly marked gluten-free.",
     cuisine: "Mediterranean · Middle Eastern", icon: "🫒", rating: "Real venue",
     menu: "Public listings describe multiple gluten-free menu options. Confirm current menu and preparation with the restaurant.",
@@ -70,7 +70,7 @@ let map;
 const markers = new Map();
 
 function statusClass(status) {
-  return status === "reviewed" ? "reviewed" : status === "declared" ? "declared" : "unknown";
+  return status === "reviewed" ? "reviewed" : status === "declared" ? "declared" : status === "preliminary" ? "preliminary" : "unknown";
 }
 function filteredRestaurants() {
   return restaurants.filter(place => {
