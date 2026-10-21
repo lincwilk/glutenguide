@@ -259,6 +259,15 @@ function openRestaurant(id) {
   directions.rel = "noopener";
   directions.textContent = "Open directions ↗";
   dialogContent.appendChild(directions);
+  if (place.sourceUrl) {
+    const sourceLink = document.createElement("a");
+    sourceLink.className = "directions-link";
+    sourceLink.href = place.sourceUrl;
+    sourceLink.target = "_blank";
+    sourceLink.rel = "noopener noreferrer";
+    sourceLink.textContent = "View information source ↗";
+    dialogContent.appendChild(sourceLink);
+  }
   const warning = document.createElement("div");
   warning.className = "dialog-warning";
   warning.textContent = "Information sources and review status are shown in this profile. Confirm current ingredients and preparation practices directly with the venue.";
