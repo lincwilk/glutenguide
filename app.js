@@ -2,7 +2,8 @@ const restaurants = [
   {
     id: 1, name: "Wheat's End Cafe & Bakery", neighborhood: "Lakeview · 543 W Diversey Pkwy",
     address: "543 W Diversey Pkwy, Chicago, IL 60614",
-    lat: 41.9321, lng: -87.6438, status: "declared", statusLabel: "Venue reports dedicated GF facility · not audited",
+    lat: 41.9321, lng: -87.6438, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    sourceUrl: "https://wheatsendcafe.com/", sourceLabel: "Wheat’s End official website", sourceChecked: "2026-10-21",
     description: "Cafe and bakery known for a fully gluten-free menu.",
     cuisine: "Cafe · Bakery", icon: "🥐", rating: "Real venue",
     menu: "Public listings describe the cafe and bakery as fully gluten-free. Confirm current menu and operations directly with the venue.",
@@ -13,7 +14,8 @@ const restaurants = [
   {
     id: 2, name: "CheSa's Bistro & Bar", neighborhood: "Avondale · 3235 W Addison St",
     address: "3235 W Addison St, Suite C, Chicago, IL 60618",
-    lat: 41.9463, lng: -87.7094, status: "declared", statusLabel: "Venue reports 100% GF kitchen · not audited",
+    lat: 41.9463, lng: -87.7094, status: "preliminary", statusLabel: "Public venue statement · not independently reviewed", dedicatedGF: true,
+    sourceUrl: "https://chesasbistro.com/about", sourceLabel: "CheSa’s official website", sourceChecked: "2026-10-21",
     description: "Cajun-Creole and Southern comfort food; public listings describe a gluten-free kitchen.",
     cuisine: "Cajun-Creole · Southern", icon: "🍲", rating: "Real venue",
     menu: "Public listings describe the restaurant as having a fully gluten-free kitchen. Confirm the current menu and status with the restaurant.",
@@ -24,7 +26,8 @@ const restaurants = [
   {
     id: 3, name: "Brightwok Kitchen", neighborhood: "The Loop · 21 E Adams St",
     address: "21 E Adams St, Chicago, IL 60603",
-    lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public info found · not independently verified",
+    lat: 41.8794, lng: -87.6274, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "",
     description: "Asian-inspired fast-casual food with publicly listed gluten-free options.",
     cuisine: "Asian-inspired · Bowls", icon: "🥗", rating: "Real venue",
     menu: "Public information indicates gluten-free options are available. Menu items and preparation practices may change; check directly before ordering.",
@@ -35,7 +38,8 @@ const restaurants = [
   {
     id: 4, name: "BIBIBOP Asian Grill", neighborhood: "North Center area · 3304 N Western Ave",
     address: "3304 N Western Ave, Chicago, IL 60618",
-    lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level GF info · location not audited",
+    lat: 41.9414, lng: -87.6874, status: "preliminary", statusLabel: "Brand-level information · location not reviewed", dedicatedGF: false,
+    sourceUrl: "", sourceLabel: "Brand-level source link not yet recorded", sourceChecked: "",
     description: "Build-your-own bowls; public brand information describes a gluten-free menu.",
     cuisine: "Asian-inspired · Bowls", icon: "🍚", rating: "Real venue",
     menu: "Public information describes gluten-free offerings. Verify this specific location, current ingredients, sauces, and handling procedures.",
@@ -46,7 +50,8 @@ const restaurants = [
   {
     id: 5, name: "Andie's Restaurant", neighborhood: "Andersonville · 5253 N Clark St",
     address: "5253 N Clark St, Chicago, IL 60640",
-    lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public info found · not independently verified",
+    lat: 41.9762, lng: -87.6683, status: "preliminary", statusLabel: "Public information · not independently verified", dedicatedGF: false,
+    sourceUrl: "", sourceLabel: "Official source link not yet recorded", sourceChecked: "",
     description: "Mediterranean and Middle Eastern restaurant with menu items publicly marked gluten-free.",
     cuisine: "Mediterranean · Middle Eastern", icon: "🫒", rating: "Real venue",
     menu: "Public listings describe multiple gluten-free menu options. Confirm current menu and preparation with the restaurant.",
