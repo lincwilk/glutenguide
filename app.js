@@ -259,3 +259,28 @@ document.getElementById("reviewForm").addEventListener("submit", event => {
 });
 initMap();
 renderRestaurants();
+
+// Explain the labels automatically on a visitor's first visit, with a permanent button to reopen the guide.
+const categoryHelpDialog = document.getElementById("categoryHelpDialog");
+const openCategoryHelp = () => {
+  if (categoryHelpDialog && typeof categoryHelpDialog.showModal === "function" && !categoryHelpDialog.open) {
+    categoryHelpDialog.showModal();
+  }
+};
+document.getElementById("categoryHelpOpen").addEventListener("click", openCategoryHelp);
+document.getElementById("categoryHelpClose").addEventListener("click", () => categoryHelpDialog.close());
+document.getElementById("categoryHelpDone").addEventListener("click", () => categoryHelpDialog.close());
+categoryHelpDialog.addEventListener("click", event => {
+  if (event.target === categoryHelpDialog) categoryHelpDialog.close();
+});
+try {
+  if (!sessionStorage.getItem("glutenguide-category-guide-seen")) {
+    window.setTimeout(() => {
+      openCategoryHelp();
+      sessionStorage.setItem("glutenguide-category-guide-seen", "1");
+    }, 700);
+  }
+} catch (error) {
+  // If storage is unavailable, the visitor can still open the guide using the button.
+  window.setTimeout(openCategoryHelp, 700);
+}
