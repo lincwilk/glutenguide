@@ -135,10 +135,11 @@
     if (state.preferences.includes("Celiac disease")) questions = questions.concat(["Can the kitchen prevent cross-contact for a celiac order?", "Are separate utensils, surfaces and fryer oil used?"]);
     if (!questions.length) questions = ["Which ingredients are used?", "Are fryers, utensils and preparation surfaces shared?", "What steps are taken to prevent cross-contact?"];
     var audit = p.onSiteAudit && p.onSiteAudit.approvalStatus === "approved" ? '<p>Audit record: ' + esc(p.onSiteAudit.auditDate || "Date not provided") + '</p>' : notVisited(p);
+    var staleWarning = p.status === "preliminary" ? '<div class="notice">Public information has not been confirmed directly with this restaurant and may be outdated.</div>' : "";
     return '<div class="profile-heading"><button type="button" class="back-link" data-back>← Back</button>' + badge(p) + '<h2>' + esc(p.name) + '</h2><p>' + esc(p.address || "Address not provided") + '</p><p class="muted">' + esc(p.neighborhood || "Neighborhood not provided") + ' · ' + esc(p.cuisine || "Cuisine not provided") + '</p></div>' +
       '<div class="profile-actions"><button type="button" class="button" data-save="' + p.id + '" aria-pressed="' + state.saved.includes(p.id) + '">' + (state.saved.includes(p.id) ? "♥ Saved" : "♡ Save place") + '</button><a class="button secondary" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.address || p.name + ", Chicago") + '" target="_blank" rel="noopener noreferrer">Get directions ↗</a>' + website + '</div>' +
       '<section class="info-card"><p class="eyebrow">FACILITY TYPE</p><h3>' + esc(facility(p)) + '</h3><p>' + esc(p.dedicatedDescription || "Further details about the facility type have not been provided.") + '</p><p><strong>Shared equipment:</strong> ' + esc(p.sharedEquipment || "Not provided") + '</p><p><strong>Cross-contact procedures:</strong> ' + esc(p.crossContactProcedures || "Not provided") + '</p></section>' +
-      '<section class="info-card"><p class="eyebrow">EVIDENCE AVAILABLE</p><h3>What is currently known</h3><p>' + esc(p.menu || p.description || "Not provided") + '</p><p>' + esc(p.practices || "Not provided") + '</p><p><strong>Evidence scope:</strong> ' + esc(p.evidenceScope || "Not provided") + '</p><p><strong>What this does not establish:</strong> ' + esc(p.evidenceLimitations || S.disclaimer) + '</p><p><strong>Source last checked:</strong> ' + esc(p.sourceChecked || "Not yet checked") + '</p><p><strong>Direct confirmation date:</strong> ' + esc(p.lastConfirmedDate || "Not confirmed directly") + '</p><p><strong>Operating status:</strong> ' + esc(p.operatingStatus || "Not yet confirmed") + '</p>' + source + '</section>' +
+      '<section class="info-card"><p class="eyebrow">EVIDENCE AVAILABLE</p><h3>What is currently known</h3><p>' + esc(p.menu || p.description || "Not provided") + '</p><p>' + esc(p.practices || "Not provided") + '</p><p><strong>Evidence scope:</strong> ' + esc(p.evidenceScope || "Not provided") + '</p><p><strong>What this does not establish:</strong> ' + esc(p.evidenceLimitations || S.disclaimer) + '</p><p><strong>Source last checked:</strong> ' + esc(p.sourceChecked || "Not yet checked") + '</p><p><strong>Direct confirmation date:</strong> ' + esc(p.lastConfirmedDate || "Not confirmed directly") + '</p><p><strong>Operating status:</strong> ' + esc(p.operatingStatus || "Not yet confirmed") + '</p>' + staleWarning + source + '</section>' +
       '<section class="info-card"><p class="eyebrow">ON-SITE AUDIT · SEPARATE FROM EVIDENCE CATEGORY</p><h3>Visit and audit status</h3>' + audit + '<p>No approved on-site audit record is available unless a dated record is explicitly shown here.</p></section>' +
       '<section class="info-card"><p class="eyebrow">BEFORE ORDERING</p><h3>Questions to ask the restaurant</h3><ul class="question-list">' + questions.map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + '</ul><p class="muted">Suggestions only, not medical advice.</p></section><p class="disclaimer-inline">' + esc(S.disclaimer) + '</p>';
   }
@@ -350,6 +351,14 @@
       return localStorage.getItem(key) === "1";
     } catch (e) { return false; }
   }
+  function syncMapMarkers() {
+    if (!state.map) return;
+    var visible = new Set(filterPlaces(places).map(function (p) { return p.id; }));
+    state.markers.forEach(function (marker, id) {
+      if (visible.has(id)) marker.addTo(state.map);
+      else state.map.removeLayer(marker);
+    });
+  }
   function initMap() {
     var mapEl = document.getElementById("map");
     if (!mapEl) return;
@@ -377,18 +386,7 @@
       state.markers.set(p.id, marker);
     });
     window.setTimeout(function () { if (state.map) state.map.invalidateSize(true); }, 180);
-    window.setTimeout(function () {
-      var mapSearch = document.getElementById("mapSearch");
-      if (mapSearch) mapSearch.addEventListener("input", function () {
-        var query = mapSearch.value.toLowerCase();
-        state.query = mapSearch.value;
-        state.markers.forEach(function (m, id) {
-          var p = places.find(function (x) { return x.id === id; });
-          if (p && [p.name, p.address, p.neighborhood, p.cuisine].join(" ").toLowerCase().includes(query)) m.addTo(state.map);
-          else if (state.map) state.map.removeLayer(m);
-        });
-      });
-    }, 0);
+    syncMapMarkers();
   }
   headerBack.addEventListener("click", function () { history.back(); });
   headerAction.addEventListener("click", function () { go("map"); });
