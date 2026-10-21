@@ -2,22 +2,22 @@ const restaurants = [
   {
     id: 1, name: "Wheat's End Cafe & Bakery", neighborhood: "Lakeview · 543 W Diversey Pkwy",
     address: "543 W Diversey Pkwy, Chicago, IL 60614",
-    lat: 41.9321, lng: -87.6438, status: "reviewed", statusLabel: "Dedicated gluten-free menu reported",
+    lat: 41.9321, lng: -87.6438, status: "declared", statusLabel: "Venue reports dedicated GF facility · not audited",
     description: "Cafe and bakery known for a fully gluten-free menu.",
     cuisine: "Cafe · Bakery", icon: "🥐", rating: "Real venue",
     menu: "Public listings describe the cafe and bakery as fully gluten-free. Confirm current menu and operations directly with the venue.",
-    practices: "This status is based on preliminary public information, not an independent audit by GlutenGuide. Verify current procedures, ingredients, and cross-contact controls before ordering.",
+    practices: "The venue publicly describes its facility as dedicated gluten-free. GlutenGuide has not audited this site. Verify current procedures, ingredients, and cross-contact controls before ordering.",
     questions: ["Is the kitchen and bakery still entirely gluten-free?", "Have any ingredients or suppliers changed?", "What procedures are followed for people with celiac disease?"],
     reviewDate: "GlutenGuide has not independently verified this information."
   },
   {
     id: 2, name: "CheSa's Bistro & Bar", neighborhood: "Avondale · 3235 W Addison St",
     address: "3235 W Addison St, Suite C, Chicago, IL 60618",
-    lat: 41.9463, lng: -87.7094, status: "reviewed", statusLabel: "Gluten-free kitchen reported",
+    lat: 41.9463, lng: -87.7094, status: "declared", statusLabel: "Venue reports 100% GF kitchen · not audited",
     description: "Cajun-Creole and Southern comfort food; public listings describe a gluten-free kitchen.",
     cuisine: "Cajun-Creole · Southern", icon: "🍲", rating: "Real venue",
     menu: "Public listings describe the restaurant as having a fully gluten-free kitchen. Confirm the current menu and status with the restaurant.",
-    practices: "This is a preliminary summary of public information, not an independent audit or a guarantee of zero risk.",
+    practices: "The venue publicly describes its kitchen as 100% gluten-free. GlutenGuide has not audited this site, and this is not a guarantee of zero risk.",
     questions: ["Is the kitchen still entirely gluten-free?", "Are all sauces, seasonings, and supplier ingredients checked?", "What should a guest with celiac disease tell the staff?"],
     reviewDate: "GlutenGuide has not independently verified this information."
   },
@@ -35,11 +35,11 @@ const restaurants = [
   {
     id: 4, name: "BIBIBOP Asian Grill", neighborhood: "North Center area · 3304 N Western Ave",
     address: "3304 N Western Ave, Chicago, IL 60618",
-    lat: 41.9414, lng: -87.6874, status: "reviewed", statusLabel: "Gluten-free menu reported",
+    lat: 41.9414, lng: -87.6874, status: "declared", statusLabel: "Brand reports GF menu · confirm this location",
     description: "Build-your-own bowls; public brand information describes a gluten-free menu.",
     cuisine: "Asian-inspired · Bowls", icon: "🍚", rating: "Real venue",
     menu: "Public information describes gluten-free offerings. Verify this specific location, current ingredients, sauces, and handling procedures.",
-    practices: "Brand-level claims are not an independent verification of this location's current food preparation. Ask staff about celiac-specific procedures.",
+    practices: "Brand-level gluten-free claims are not an independent verification of this location's current food preparation. GlutenGuide has not audited this site. Ask staff about celiac-specific procedures.",
     questions: ["Does this location follow the brand's current gluten-free procedures?", "How are utensils and serving areas managed?", "Are sauces and toppings checked for ingredient changes?"],
     reviewDate: "GlutenGuide has not independently verified this location."
   },
@@ -215,7 +215,8 @@ function openRestaurant(id) {
     ["Menu information", place.menu],
     ["What is currently known", place.practices],
     ["Questions to ask the restaurant", place.questions.map(question => "• " + question).join("\n")],
-    ["Verification status", place.reviewDate]
+    ["Verification status", place.reviewDate],
+    ["GlutenGuide audit status", "NOT AUDITED. This prototype demonstrates a planned checklist only. An actual review would document ingredient and supplier evidence, shared equipment and surfaces, cleaning, staff training, order handling, visit date, findings, and follow-up. No audit findings or pass/fail score have been recorded for this restaurant."]
   ];
   sections.forEach(([title, content]) => {
     const section = document.createElement("section");
