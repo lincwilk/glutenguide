@@ -1,5 +1,5 @@
 (function(){
-const places=window.GG_PLACES||[];const screen=document.getElementById('screen');const modalRoot=document.getElementById('modal-root');const toastEl=document.getElementById('toast');
+const places=[];const screen=document.getElementById('screen');const modalRoot=document.getElementById('modal-root');const toastEl=document.getElementById('toast');
 const state={query:'',filter:'all',cuisine:'Todas as cozinhas',saved:JSON.parse(localStorage.getItem('gg-saved')||'[]'),prefs:JSON.parse(localStorage.getItem('gg-prefs')||'["Sem glúten"]'),map:null,osm:[],mapCenter:JSON.parse(localStorage.getItem('gg-map-center')||'[20,0]'),locationChosen:localStorage.getItem('gg-location-chosen')==='true',filters:{options:'Todas',facility:'Todos',cross:false}};
 const statusText={public:'Informação pública · não verificada',limited:'Informação limitada',reviewed:'Revisão documentada',declared:'Informação declarada pelo restaurante'};
 const facilityText={dedicated:'O estabelecimento se apresenta publicamente como dedicado sem glúten.',options:'Oferece ou pode oferecer opções sem glúten; a cozinha dedicada não foi confirmada.'};
